@@ -5,7 +5,7 @@ FROM openjdk:17
 WORKDIR /app
 
 # build/libs/app.jar을 컨테이너에 복사
-COPY build/libs/*.jar app.jar
+COPY build/libs/gamproject-1.0.jar app.jar
 
 # 실행 명령
 #ENTRYPOINT ["java", "-jar", "app.jar"]
