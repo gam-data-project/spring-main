@@ -29,19 +29,28 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         return http
-                .authorizeRequests() //인증, 인가 설정
-                .requestMatchers("/login","/user/login", "/admin/**", "/static/**", "/signup", "/user").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .formLogin()// 폼 기반 로그인 설정
-                .loginPage("/login")
-                .defaultSuccessUrl("/articles") //html 수정필요!!!!
-                .and()
-                .logout() //로그아웃 설정
-                .logoutSuccessUrl("/login")
-                .invalidateHttpSession(true)
-                .and()
-                .csrf().disable() //csrf 비활성화
+                .csrf(csrf -> csrf.disable()) //csrf 비활성화
+                .authorizeRequests(auth -> auth
+                        // ✅ /renewal/** 전체 오픈
+                        .requestMatchers("/renewal/**").permitAll()
+
+                        // 기존 공개 경로
+                        .requestMatchers("/login","/user/login", "/admin/**", "/static/**", "/signup", "/user")
+                        .permitAll()
+
+                        // 나머지는 인증 필요
+                        .anyRequest().authenticated()) //인증, 인가 설정
+
+                .formLogin(form -> form.disable())
+                .logout(logout -> logout.disable())
+//                .formLogin(form -> form
+//                        .loginPage("/login")
+//                        .defaultSuccessUrl("/articles", true)
+//                        .permitAll())// 폼 기반 로그인 설정
+//
+//                .logout(logout -> logout
+//                        .logoutSuccessUrl("/login")
+//                        .invalidateHttpSession(true)) //로그아웃 설정
                 .build();
     }
 

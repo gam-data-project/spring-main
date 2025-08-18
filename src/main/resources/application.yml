@@ -12,8 +12,8 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:11306/gamdb2
-    url: jdbc:mysql://gam-mysql:3306/gamdb2
+    url: jdbc:mysql://localhost:11306/gamdb2
+#    url: jdbc:mysql://gam-mysql:3306/gamdb2
     username: root
     password: '0000'
 
