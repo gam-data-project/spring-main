@@ -32,6 +32,7 @@ mybatis:
 #    jdbc-type-for-null: varchar
 #    default-fetch-size: 500
   mapper-locations: classpath:mappers/*.xml
-  type-aliases-package: com.example.demo.domain
+  type-aliases-package: com.example.demo.domain, org.example.dto
   configuration:
     map-underscore-to-camel-case: true
+

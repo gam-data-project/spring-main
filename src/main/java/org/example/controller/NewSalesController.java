@@ -24,6 +24,7 @@ public class NewSalesController {
         System.out.println(sales);
 
         int inserted = newSalesService.save(sales);
+        //없서트
 
         return ResponseEntity.ok("데이터 수신/저장 완료(" + inserted + ")");
     }
