@@ -17,5 +17,6 @@ public class NewSalesService {
     @Transactional
     public int save(NewSales sales) {
         return newSalesMapper.insertNewSales(sales);
+
     }
 }
