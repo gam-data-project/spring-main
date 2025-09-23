@@ -11,6 +11,7 @@
         platform,
         shipping_included,
         total_delivery_fee,
+        unit_price,
         shipping_count,
         order_date
         )
@@ -20,6 +21,7 @@
         #{platform},
         #{shippingIncluded},
         #{totalDeliveryFee},
+        #{unitPrice},
         #{shippingCount},
         #{orderDate}
         )

@@ -20,5 +20,12 @@
 <!--        SELECT category_id FROM new_product_info WHERE id = #{productId}-->
 <!--    </select>-->
 
+    <!-- 기준일(cutoff) 기준: end_date + 3개월 <= cutoff 이면 active=false -->
+    <update id="deactivateProduct">
+        UPDATE new_product_info
+        SET active = NULL
+        WHERE active = TRUE
+        AND DATE_ADD(end_date, INTERVAL 4 MONTH) <![CDATA[<=]]> #{date}
+    </update>
 
 </mapper>
