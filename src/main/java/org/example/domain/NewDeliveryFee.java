@@ -20,9 +20,11 @@ public class NewDeliveryFee {
     //배송비 포함여부
     private boolean shippingIncluded;   // JSON is_shipping_included 자동 매핑
     //총 배송금액
-    private int totalDeliveryFee;
+    private Integer totalDeliveryFee;
+    //배송비 단가
+    private Integer unitPrice;
     //배송비 개수
-    private int shippingCount;
+    private Integer shippingCount;
     //주문 날짜
     private String orderDate; // "yyyy-MM-dd"
 
