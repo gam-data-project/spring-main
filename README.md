@@ -97,10 +97,8 @@
 ![ERD](images/usecase.png)
 
 ## 🎨 ERD Diagram
-<br/>
 ### [ 2024년 1차 개발 시 ERD ]
 ![ERD](images/ERDdiagram.png)
-<br/>
 ### [ 2025년 2차 개발 시 ERD ]
 ![ERD](images/renewal_ERD.png)
 <br>
