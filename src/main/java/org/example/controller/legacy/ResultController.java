@@ -1,4 +1,4 @@
-package org.example.controller;
+package org.example.controller.legacy;
 
 import org.example.domain.Report;
 import org.example.service.ResultService;

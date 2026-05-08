@@ -1,4 +1,4 @@
-package org.example.controller;
+package org.example.controller.renewal;
 
 import lombok.RequiredArgsConstructor;
 import org.example.service.NewResultService;

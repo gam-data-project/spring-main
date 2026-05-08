@@ -1,8 +1,6 @@
-package org.example.controller;
+package org.example.controller.legacy;
 
-import lombok.RequiredArgsConstructor;
 import org.example.domain.AddUserRequest;
-import org.example.domain.UserRequest;
 import org.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

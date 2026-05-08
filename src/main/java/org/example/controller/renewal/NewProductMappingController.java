@@ -1,6 +1,7 @@
-package org.example.controller;
+package org.example.controller.renewal;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.service.NewProductMappingService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/renewal")
 @RequiredArgsConstructor
+@Slf4j
 public class NewProductMappingController {
 
     private final NewProductMappingService productMappingService;
@@ -27,10 +29,12 @@ public class NewProductMappingController {
             @RequestParam("to")   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
 
         int total = productMappingService.backfillByDateRange(from, to);
-        return ResponseEntity.ok(
-                String.format("✅ Backfill done. from=%s, to=%s, processed=%d",
-                        from, to, total)
-        );
+
+        String msg = String.format("Backfill done. from=%s, to=%s, processed=%d", from, to, total);
+        log.info("{}", msg);
+
+        return ResponseEntity.ok(msg);
+
     }
 
 }

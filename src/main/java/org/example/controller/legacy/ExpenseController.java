@@ -1,4 +1,4 @@
-package org.example.controller;
+package org.example.controller.legacy;
 
 import org.example.domain.Expense;
 import org.example.service.ExpenseService;

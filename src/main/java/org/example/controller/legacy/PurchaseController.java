@@ -1,14 +1,11 @@
-package org.example.controller;
+package org.example.controller.legacy;
 
 import org.example.domain.Purchase;
 import org.example.service.PurchaseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
 @RestController
 public class PurchaseController {

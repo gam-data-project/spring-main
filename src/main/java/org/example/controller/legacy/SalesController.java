@@ -1,4 +1,4 @@
-package org.example.controller;
+package org.example.controller.legacy;
 
 import org.example.service.SalesService;
 import org.springframework.beans.factory.annotation.Autowired;

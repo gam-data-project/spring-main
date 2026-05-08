@@ -1,4 +1,4 @@
-package org.example.controller;
+package org.example.controller.legacy;
 
 import org.example.domain.Category;
 import org.example.service.CategoryService;
@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 @RestController
 public class CategoryController {

@@ -1,7 +1,6 @@
-package org.example.controller;
+package org.example.controller.renewal;
 
 import lombok.RequiredArgsConstructor;
-import org.example.domain.NewDeliveryFee;
 import org.example.domain.NewSales;
 import org.example.service.NewSalesService;
 import org.springframework.http.ResponseEntity;
