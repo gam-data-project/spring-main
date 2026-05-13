@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.example.repository.renewal.NewExpenseInfoMapper">
+
+    <insert id="insertNewExpenseList" parameterType="java.util.List">
+        INSERT INTO new_expense_info
+        (
+        expense_date,
+        expense_time,
+        category_id,
+        expense_type,
+        unit_cost,
+        quantity,
+        total_cost,
+        description
+        )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.expenseDate},
+            #{item.expenseTime},
+            #{item.categoryId},
+            #{item.expenseType},
+            #{item.unitCost},
+            #{item.quantity},
+            #{item.totalCost},
+            #{item.description}
+            )
+        </foreach>
+    </insert>
+
+</mapper>
