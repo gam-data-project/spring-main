@@ -36,6 +36,8 @@ dependencies {
     implementation 'org.apache.poi:poi-ooxml:3.17'
     /* mysql 설정*/
     implementation 'mysql:mysql-connector-java'
+    /* swagger API 문서 */
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
 }
 
