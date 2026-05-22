@@ -1,9 +1,7 @@
 package org.example.controller;
 
-import lombok.RequiredArgsConstructor;
-import org.example.domain.AddUserRequest;
-import org.example.domain.UserRequest;
-import org.example.service.UserService;
+import org.example.dto.user.request.AddUserRequest;
+import org.example.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

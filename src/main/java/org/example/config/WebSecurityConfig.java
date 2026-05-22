@@ -1,7 +1,7 @@
 package org.example.config;
 
 import lombok.RequiredArgsConstructor;
-import org.example.service.CustomUserDetailService;
+import org.example.service.user.CustomUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,11 +31,24 @@ public class WebSecurityConfig {
         return http
                 .csrf(csrf -> csrf.disable()) //csrf 비활성화
                 .authorizeRequests(auth -> auth
+                        // [임시] 대시보드 정적 페이지 접근 허용
+                        .requestMatchers("/dashboard/**").permitAll()
                         // ✅ /renewal/** 전체 오픈
                         .requestMatchers("/renewal/**").permitAll()
 
                         // 기존 공개 경로
-                        .requestMatchers("/login","/user/login", "/admin/**", "/static/**", "/signup", "/user")
+                        .requestMatchers(
+                                "/login",
+                                "/user/login",
+                                "/admin/**",
+                                "/static/**",
+                                "/signup",
+                                "/user",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/v3/api-docs.yaml"
+                        )
                         .permitAll()
 
                         // 나머지는 인증 필요

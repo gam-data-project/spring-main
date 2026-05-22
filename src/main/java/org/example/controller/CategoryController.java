@@ -1,50 +1,118 @@
 package org.example.controller;
 
-import org.example.domain.Category;
-import org.example.service.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.example.dto.category.request.CategorySearchRequestDto;
+import org.example.dto.category.request.CategoryUpsertRequestDto;
+import org.example.dto.category.response.CategoryCommandResponseDto;
+import org.example.dto.category.response.CategoryOptionDto;
+import org.example.dto.category.response.CategoryPageResponseDto;
+import org.example.service.category.CategoryManageService;
+import org.example.service.category.CategoryReadService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 
+/**
+ * 카테고리 셀렉트 박스(대/중/소) 옵션 조회 API 컨트롤러.
+ */
 @RestController
+@RequestMapping("/renewal/categories")
+@RequiredArgsConstructor
 public class CategoryController {
+    private final CategoryReadService categoryReadService;
+    private final CategoryManageService categoryManageService;
 
-    @Autowired
-    private CategoryService categoryService;
-    //카테고리 입력
-    @PostMapping("/savecategory")
-    public void saveCategory(@RequestBody Category category){
-        categoryService.saveCategory(category);
-    }
-    //카테고리 전체 리스트 조회
-    @GetMapping("/selectallcategory")
-    public List<Category> selectAllCategory(){
-        return categoryService.selectAllCategory();
-    }
-    //중분류로 소분류 카테고리 리스트 조회
-    @GetMapping("/selectbycategory")
-    public List<Category> selectByCategory(@RequestParam String mediumdata){
-        System.out.println(mediumdata);
-        return categoryService.selectByCategory(mediumdata);
-    }
-    //카테고리클래스의 제품 정보를 수정
-    //원본 제품 정보와 수정 제품 정보를 입력받음 (JSON을 MAP타입으로 받아서 Category 타입으로 변환)
-    //원본 제품의 거래완료날짜 자동 수정되고 수정제품정보 새로 등록함
-    @PostMapping("/updatecategory")
-    public Boolean updateCategory(@RequestBody Map<String, Object> object){
-        Category origin = new Category((Map<String, Object>) object.get("origin"));
-        Category modify = new Category((Map<String, Object>) object.get("modify"));
-        System.out.println(origin.toString());
-        System.out.println(modify.toString());
-        return categoryService.updateCategory(origin,modify);
-        //return categoryService.updateCategory(category);
+    /**
+     * 대분류 전체 유니크 목록을 조회한다.
+     *
+     * @return 대분류 옵션 리스트
+     */
+    @GetMapping("/large")
+    public ResponseEntity<List<CategoryOptionDto>> getLargeCategories() {
+        return ResponseEntity.ok(categoryReadService.getLargeCategories());
     }
 
-    @DeleteMapping("/deletecategory")
-    public Boolean deleteCategory(@RequestBody Category category){
-        return categoryService.deleteCategory(category);
+    /**
+     * 선택한 대분류에 속한 중분류 유니크 목록을 조회한다.
+     *
+     * @param largeCategory 선택된 대분류
+     * @return 중분류 옵션 리스트
+     */
+    @GetMapping("/medium")
+    public ResponseEntity<List<CategoryOptionDto>> getMediumCategories(
+            @RequestParam String largeCategory
+    ) {
+        return ResponseEntity.ok(categoryReadService.getMediumCategories(largeCategory));
+    }
+
+    /**
+     * 선택한 대분류+중분류에 속한 소분류 유니크 목록을 조회한다.
+     *
+     * @param largeCategory 선택된 대분류
+     * @param mediumCategory 선택된 중분류
+     * @return 소분류 옵션 리스트
+     */
+    @GetMapping("/small")
+    public ResponseEntity<List<CategoryOptionDto>> getSmallCategories(
+            @RequestParam String largeCategory,
+            @RequestParam String mediumCategory
+    ) {
+        return ResponseEntity.ok(
+                categoryReadService.getSmallCategories(largeCategory, mediumCategory)
+        );
+    }
+
+    /**
+     * 카테고리 목록 페이징 조회.
+     * large/medium/small이 ALL(또는 전체)이면 해당 조건은 제외한다.
+     */
+    @GetMapping("/page")
+    public ResponseEntity<CategoryPageResponseDto> getCategoryPage(
+            @ModelAttribute CategorySearchRequestDto request
+    ) {
+        return ResponseEntity.ok(categoryReadService.getCategoryPage(request));
+    }
+
+
+
+
+    /**
+     * 카테고리 신규 등록.
+     *
+     * @param request 생성 요청 본문
+     * @return 처리 결과
+     */
+    @PostMapping
+    public ResponseEntity<CategoryCommandResponseDto> createCategory(
+            @RequestBody CategoryUpsertRequestDto request
+    ) {
+        return ResponseEntity.ok(categoryManageService.createCategory(request));
+    }
+
+    /**
+     * 카테고리 수정.
+     *
+     * @param id 수정 대상 ID
+     * @param request 수정 요청 본문
+     * @return 처리 결과
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryCommandResponseDto> updateCategory(
+            @PathVariable Long id,
+            @RequestBody CategoryUpsertRequestDto request
+    ) {
+        return ResponseEntity.ok(categoryManageService.updateCategory(id, request));
+    }
+
+    /**
+     * 카테고리 삭제.
+     *
+     * @param id 삭제 대상 ID
+     * @return 처리 결과
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<CategoryCommandResponseDto> deleteCategory(@PathVariable Long id) {
+        return ResponseEntity.ok(categoryManageService.deleteCategory(id));
     }
 }

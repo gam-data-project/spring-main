@@ -1,36 +1,33 @@
 package org.example.controller;
 
-import org.example.service.SalesService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.example.dto.sales.request.SalesRequestDto;
+import org.example.service.sales.NewSalesService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 
 @RestController
+@RequestMapping("/renewal")
+@RequiredArgsConstructor
 public class SalesController {
-    @Autowired
-    SalesService salesService;
-    //농라 매출 엑셀 업로드
-    @PostMapping("/uploadnongrasales")
-    public Boolean uploadNongraSales(@RequestParam(value="file") MultipartFile multi) throws IOException {
-        return salesService.uploadNongraSales(multi);
-    }
-    //농라 정산 엑셀 업로드
-    @PostMapping("/uploadnongracommission")
-    public Boolean uploadNongraCommission(@RequestParam(value="file") MultipartFile multi) throws IOException {
-        return salesService.uploadNongraCommission(multi);
+
+    private final NewSalesService newSalesService;
+
+    @PostMapping("/salesData")
+    public ResponseEntity<String> insertNewSales(@RequestBody SalesRequestDto sales){
+        // 받은 데이터 확인 (콘솔 출력)
+        System.out.println("=== New Sales Data Received ===");
+        System.out.println(sales);
+
+        int inserted = newSalesService.save(sales);
+        //없서트
+
+        return ResponseEntity.ok("데이터 수신/저장 완료(" + inserted + ")");
     }
 
-//    @PostMapping("/uploadsmartstoresales")
-//    public Boolean uploadSmartstoreSales(@RequestParam(value="file") MultipartFile multi){
-//
-//    }
-//
-//    @PostMapping("/uploadsmartstorecommission")
-//    public Boolean uploadSmartstoreCal(@RequestParam(value="file") MultipartFile multi){
-//
-//    }
+
+
 }

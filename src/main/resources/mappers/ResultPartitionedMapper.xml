@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.repository.ResultPartitionedMapper">
+
+    <insert id="insertSalesIntoResult">
+        INSERT IGNORE INTO test_result_partitioned
+        (type, source_id, large_category, medium_category, small_category,
+        product_name, quantity, unit_price, total, event_date)
+        SELECT
+        #{type},
+        sales.id,
+        category.large_category,
+        category.medium_category,
+        category.small_category,
+        product.product_name,
+        sales.quantity,
+        sales.unit_price,
+        sales.product_total,
+        sales.order_date
+        FROM new_sales_data sales
+        JOIN new_product_info product ON product.id = sales.product_id
+        JOIN new_category category     ON category.id = product.category_id
+        WHERE sales.order_date BETWEEN #{from} AND #{to}
+    </insert>
+
+
+    <insert id="insertDeliveryFeeIntoResult">
+        INSERT IGNORE INTO test_result_partitioned
+        (type, source_id, large_category, medium_category, small_category,
+        product_name, quantity, unit_price, total, event_date)
+        SELECT
+        #{type},
+        delivery.id,
+        category.large_category,
+        category.medium_category,
+        category.small_category,
+        delivery.order_number,
+        delivery.shipping_count,
+        delivery.unit_price,
+        delivery.total_delivery_fee,
+        delivery.order_date
+        FROM new_delivery_fee delivery
+        JOIN new_category category ON category.id = delivery.category_id
+        WHERE delivery.category_id = 63
+        AND delivery.total_delivery_fee > 0
+        AND delivery.order_date BETWEEN #{from} AND #{to}
+    </insert>
+
+</mapper>

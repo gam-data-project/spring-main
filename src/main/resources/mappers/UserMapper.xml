@@ -12,7 +12,7 @@
 
     </select>
 
-    <insert id="saveUser" parameterType="org.example.domain.AddUserRequest">
+    <insert id="saveUser" parameterType="org.example.dto.user.request.AddUserRequest">
 
         INSERT INTO user (username, password)
         VALUES(#{username}, #{password})
