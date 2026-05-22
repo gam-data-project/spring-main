@@ -1,78 +1,148 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="org.example.repository.CategoryMapper">
-    <insert id="saveCategory" parameterType="org.example.domain.Category">
 
-        INSERT INTO category (largeCategory, mediumCategory, smallCategory,
-                            productName,startDate,endDate,productQuantity,productAmount)
-        VALUES(#{largeCategory},#{mediumCategory},
-            #{smallCategory},#{productName},
-            #{startDate}, '29991231',
-            #{productQuantity},#{productAmount})
+    <!-- 대분류 유니크 목록 조회 -->
+    <select id="selectDistinctLargeCategories"
+            resultType="org.example.dto.category.response.CategoryOptionDto">
+        SELECT DISTINCT large_category AS value
+        FROM new_category
+        ORDER BY large_category
+    </select>
 
+    <!-- 대분류 기준 중분류 유니크 목록 조회 -->
+    <select id="selectDistinctMediumCategoriesByLarge"
+            parameterType="string"
+            resultType="org.example.dto.category.response.CategoryOptionDto">
+        SELECT DISTINCT medium_category AS value
+        FROM new_category
+        WHERE large_category = #{largeCategory}
+        ORDER BY medium_category
+    </select>
+
+    <!-- 대분류+중분류 기준 소분류 유니크 목록 조회 -->
+    <select id="selectDistinctSmallCategoriesByLargeMedium"
+            resultType="org.example.dto.category.response.CategoryOptionDto">
+        SELECT DISTINCT small_category AS value
+        FROM new_category
+        WHERE large_category = #{largeCategory}
+        AND medium_category = #{mediumCategory}
+        ORDER BY small_category
+    </select>
+
+
+
+
+
+
+
+    <!-- 공통 동적 WHERE: ALL(또는 전체)면 조건 제외 -->
+    <sql id="CategoryFilterWhere">
+        <where>
+            <if test="req.largeCategory != null and req.largeCategory != '' and req.largeCategory != 'ALL' and req.largeCategory != '전체'">
+                AND large_category = #{req.largeCategory}
+            </if>
+            <if test="req.mediumCategory != null and req.mediumCategory != '' and req.mediumCategory != 'ALL' and req.mediumCategory != '전체'">
+                AND medium_category = #{req.mediumCategory}
+            </if>
+            <if test="req.smallCategory != null and req.smallCategory != '' and req.smallCategory != 'ALL' and req.smallCategory != '전체'">
+                AND small_category = #{req.smallCategory}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 페이징용 총 건수 조회 -->
+    <select id="countCategoryPage" resultType="long">
+        SELECT COUNT(*)
+        FROM new_category
+        <include refid="CategoryFilterWhere"/>
+    </select>
+
+    <!-- 페이징 목록 조회 -->
+    <select id="selectCategoryPage"
+            resultType="org.example.dto.category.response.CategoryListItemDto">
+        SELECT
+        id,
+        large_category AS largeCategory,
+        medium_category AS mediumCategory,
+        small_category AS smallCategory,
+        created_at AS createdAt,
+        updated_at AS updatedAt
+        FROM new_category
+        <include refid="CategoryFilterWhere"/>
+        ORDER BY id DESC
+        LIMIT #{req.limit} OFFSET #{req.offset}
+    </select>
+
+
+
+    <!-- 유니크 키 중복 확인 -->
+    <select id="countByUniqueKey" resultType="int">
+        SELECT COUNT(*)
+        FROM new_category
+        WHERE large_category = #{largeCategory}
+        AND medium_category = #{mediumCategory}
+        AND small_category = #{smallCategory}
+    </select>
+
+    <!-- 수정 시 본인 제외 중복 확인 -->
+    <select id="countByUniqueKeyExcludingId" resultType="int">
+        SELECT COUNT(*)
+        FROM new_category
+        WHERE id != #{id}
+        AND large_category = #{largeCategory}
+        AND medium_category = #{mediumCategory}
+        AND small_category = #{smallCategory}
+    </select>
+
+    <!-- 카테고리 신규 등록 -->
+    <insert id="insertCategory">
+        INSERT INTO new_category
+        (
+        large_category,
+        medium_category,
+        small_category
+        )
+        VALUES
+        (
+        #{largeCategory},
+        #{mediumCategory},
+        #{smallCategory}
+        )
     </insert>
 
-
-    <select id="selectAllCategory" resultType="org.example.domain.Category">
-
-        SELECT largeCategory, mediumCategory, smallCategory,
-                startDate, endDate, productName, productQuantity, productAmount
-        FROM category
-
+    <!-- 유니크 키로 ID 조회 -->
+    <select id="findIdByUniqueKey" resultType="long">
+        SELECT id
+        FROM new_category
+        WHERE large_category = #{largeCategory}
+        AND medium_category = #{mediumCategory}
+        AND small_category = #{smallCategory}
+        LIMIT 1
     </select>
 
-    <select id="selectByCategory" parameterType="java.lang.String" resultType="org.example.domain.Category">
-
-        SELECT largeCategory, mediumCategory, smallCategory, productName,
-                startDate, endDate, productQuantity, productAmount
-        FROM category
-        WHERE mediumCategory = #{mediumdata}
-
-    </select>
-
-    <update id="updateCategory" parameterType="org.example.domain.Category">
-
-        UPDATE category
-        SET endDate = DATE_FORMAT(STR_TO_DATE(#{modify.startDate},'%Y%m%d')-1, '%Y%m%d')
-        WHERE productName = #{origin.productName}
-          and endDate = '29991231'
-
+    <!-- ID 기준 카테고리 수정 -->
+    <update id="updateCategoryById">
+        UPDATE new_category
+        SET large_category = #{largeCategory},
+        medium_category = #{mediumCategory},
+        small_category = #{smallCategory}
+        WHERE id = #{id}
     </update>
 
-    <select id="selectforConfirm" parameterType="org.example.domain.Category" resultType="org.example.domain.Category">
-
-        SELECT largeCategory, mediumCategory, smallCategory, productName,
-                startDate, endDate, productQuantity, productAmount
-        FROM category
-        WHERE largeCategory = #{largeCategory}
-          and mediumCategory = #{mediumCategory}
-          and smallCategory = #{smallCategory}
-          and productName = #{productName}
-          and startDate = #{startDate}
-          and endDate = #{endDate}
-
-    </select>
-
-    <delete id="deleteCategory" parameterType="org.example.domain.Category">
-
-        DELETE FROM category
-        WHERE largeCategory = #{largeCategory}
-          and mediumCategory = #{mediumCategory}
-          and smallCategory = #{smallCategory}
-          and productName = #{productName}
-          and startDate = #{startDate}
-          and endDate = #{endDate}
-
+    <!-- ID 기준 카테고리 삭제 -->
+    <delete id="deleteCategoryById">
+        DELETE FROM new_category
+        WHERE id = #{id}
     </delete>
 
 
-    <select id="findSmallCategory" parameterType="java.util.Map" resultType="org.example.domain.Category">
 
-        SELECT startDate, endDate, largeCategory, mediumCategory, smallCategory, productName, productQuantity,productAmount
-        FROM category
-        WHERE largeCategory = '매출' and productName = #{productName} and #{date} between startDate and endDate
 
-    </select>
 </mapper>
+
+
+
+

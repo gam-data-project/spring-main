@@ -1,7 +1,7 @@
 package org.example.controller.legacy;
 
-import org.example.domain.Report;
-import org.example.service.ResultService;
+import org.example.domain.legacy.Report;
+import org.example.service.legacy.ResultService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;

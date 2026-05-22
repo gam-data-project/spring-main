@@ -1,28 +1,115 @@
 package org.example.repository;
 
+
 import org.apache.ibatis.annotations.Mapper;
-import org.example.domain.Category;
+import org.apache.ibatis.annotations.Param;
+import org.example.dto.category.response.CategoryListItemDto;
+import org.example.dto.category.response.CategoryOptionDto;
+import org.example.dto.category.request.CategorySearchRequestDto;
 
 import java.util.List;
-import java.util.Map;
 
+/**
+ * new_category 조회 전용 MyBatis 매퍼 인터페이스.
+ */
 @Mapper
 public interface CategoryMapper {
+    /**
+     * 대분류 유니크 목록 조회.
+     *
+     * @return 대분류 옵션 리스트
+     */
+    List<CategoryOptionDto> selectDistinctLargeCategories();
 
-    void saveCategory(Category category);
+    /**
+     * 대분류로 중분류 유니크 목록 조회.
+     *
+     * @param largeCategory 대분류
+     * @return 중분류 옵션 리스트
+     */
+    List<CategoryOptionDto> selectDistinctMediumCategoriesByLarge(
+            @Param("largeCategory") String largeCategory
+    );
 
-    List<Category> selectAllCategory();
+    /**
+     * 대분류+중분류로 소분류 유니크 목록 조회.
+     *
+     * @param largeCategory 대분류
+     * @param mediumCategory 중분류
+     * @return 소분류 옵션 리스트
+     */
+    List<CategoryOptionDto> selectDistinctSmallCategoriesByLargeMedium(
+            @Param("largeCategory") String largeCategory,
+            @Param("mediumCategory") String mediumCategory
+    );
 
-    List<Category> selectByCategory(String mediumdata);
 
-    //리스트 수정
-    void updateCategory(Category origin, Category modify);
 
-    //데이터가 있는지 확인하는 함수
-    List<Category> selectforConfirm(Category category);
 
-    //Category 데이터 입력으로 삭제함
-    void deleteCategory(Category category);
+    /**
+     * 카테고리 목록 전체 건수 조회(페이징용).
+     */
+    long countCategoryPage(@Param("req") CategorySearchRequestDto request);
 
-    Category findSmallCategory(Map<String, String> nameDate);
+    /**
+     * 카테고리 목록 페이지 조회.
+     */
+    List<CategoryListItemDto> selectCategoryPage(@Param("req") CategorySearchRequestDto request);
+
+
+
+
+    /**
+     * 유니크 키(대/중/소) 중복 건수를 조회한다.
+     */
+    int countByUniqueKey(
+            @Param("largeCategory") String largeCategory,
+            @Param("mediumCategory") String mediumCategory,
+            @Param("smallCategory") String smallCategory
+    );
+
+    /**
+     * 수정 시 자기 자신(id)을 제외하고 유니크 키 중복 건수를 조회한다.
+     */
+    int countByUniqueKeyExcludingId(
+            @Param("id") Long id,
+            @Param("largeCategory") String largeCategory,
+            @Param("mediumCategory") String mediumCategory,
+            @Param("smallCategory") String smallCategory
+    );
+
+    /**
+     * 카테고리를 신규 등록한다.
+     */
+    int insertCategory(
+            @Param("largeCategory") String largeCategory,
+            @Param("mediumCategory") String mediumCategory,
+            @Param("smallCategory") String smallCategory
+    );
+
+    /**
+     * 유니크 키로 등록된 ID를 조회한다.
+     */
+    Long findIdByUniqueKey(
+            @Param("largeCategory") String largeCategory,
+            @Param("mediumCategory") String mediumCategory,
+            @Param("smallCategory") String smallCategory
+    );
+
+    /**
+     * ID 기준으로 카테고리를 수정한다.
+     */
+    int updateCategoryById(
+            @Param("id") Long id,
+            @Param("largeCategory") String largeCategory,
+            @Param("mediumCategory") String mediumCategory,
+            @Param("smallCategory") String smallCategory
+    );
+
+    /**
+     * ID 기준으로 카테고리를 삭제한다.
+     */
+    int deleteCategoryById(@Param("id") Long id);
+
+
 }

@@ -2,7 +2,10 @@ package org.example.service.renewal;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.dto.renewal.BankTransactionRowDto;
+import org.example.dto.excel.BankTransactionRowDto;
+import org.example.service.excel.NewExcelFilterService;
+import org.example.service.excel.NewExcelReadService;
+import org.example.service.migration.PurchaseMigrationService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,13 +34,13 @@ public class NewExcelFilterServiceTest {
     private NewExcelFilterService newExcelFilterService;
 
     @Autowired
-    private NewPurchaseSaveService newPurchaseSaveService;
+    private PurchaseMigrationService purchaseMigrationService;
 
 
     @Test
     @DisplayName("필터링된 매입 데이터를 DB에 저장한다")
     void saveFilteredPurchases_success() throws IOException {
-        int insertedCount = newPurchaseSaveService.saveFilteredPurchases(fileName);
+        int insertedCount = purchaseMigrationService.saveFilteredPurchases(fileName);
 
         log.info("저장된 매입 데이터 건수={}", insertedCount);
 

@@ -8,7 +8,7 @@
     </select>
 
 
-    <select id="showReport" parameterType="java.lang.String" resultType="org.example.domain.Report">
+    <select id="showReport" parameterType="java.lang.String" resultType="org.example.domain.legacy.Report">
         SELECT #{month} as date, A.lc as largeCategory, A.mc as mediumCategory, A.sc as smallCategory
                 , sum(A.a) as sumPurchase, sum(A.b) as sumSales, sum(A.c) as sumExpense, sum(A.profit) as profit
         FROM(

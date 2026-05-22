@@ -2,8 +2,8 @@ package org.example.service.renewal;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.service.NewProductDeactiveService;
-import org.example.service.NewProductMappingService;
+import org.example.service.product.NewProductDeactiveService;
+import org.example.service.product.NewProductMappingService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

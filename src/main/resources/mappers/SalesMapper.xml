@@ -1,74 +1,74 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.example.repository.SalesMapper">
-    <insert id="uploadNongraSales" parameterType="java.util.List">
 
-        INSERT INTO sales (
-        ID,
-        date,
-        smallCategory,
-        channel,
-        productName,
-        payway,
-        salesCount,
-        salesAmount
-        )
-        VALUES
-        <foreach collection="list" item="item" separator=",">
+    <insert id="insertNewSales" parameterType="org.example.dto.sales.request.SalesRequestDto"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO new_sales_work_20260510
         (
-            #{item.ID},
-            #{item.date},
-            #{item.smallCategory},
-            #{item.channel},
-            #{item.productName},
-            #{item.payway},
-            #{item.salesCount},
-            #{item.salesAmount}
-            )
-        </foreach>
-    </insert>
-
-    <insert id="uploadNongraCommission" parameterType="java.util.List">
-
-        INSERT INTO commission (
-        ID,
-        date,
-        smallCategory,
-        commissionCount,
-        commissionAmount,
-        channel
+        order_number,
+        platform,
+        product_name_raw,
+        product_id,
+        quantity,
+        product_total,
+        unit_price,
+        shipping_included,
+        order_date
         )
         VALUES
-        <foreach collection="list" item="item" separator=",">
-            (
-            #{item.ID},
-            #{item.date},
-            #{item.smallCategory},
-            #{item.commissionCount},
-            #{item.commissionAmount},
-            #{item.channel}
-            )
-        </foreach>
+        (
+        #{orderNumber},
+        #{platform},
+        #{productNameRaw},
+        #{productId,jdbcType=BIGINT},
+        #{quantity},
+        #{productTotal},
+        #{unitPrice},
+        #{shippingIncluded},
+        #{orderDate}   <!-- 문자열 'YYYY-MM-DD' 또는 LocalDate 사용 -->
+        )
     </insert>
 
-    <select id="checkUploadSales" parameterType="org.example.domain.Sales" resultType="org.example.domain.Sales">
+    <select id ="findUnmappedSales" resultType="org.example.dto.sales.response.SalesMappingDto">
+        SELECT
+            id,
+            product_name_raw AS productNameRaw,
+            product_id AS productId,
+            unit_price AS unitPrice,
+            platform,
+            shipping_included AS shippingIncluded,
+            order_date AS orderDate
+        FROM new_sales_work_20260510
+        WHERE product_id IS NULL
+        ORDER BY id
+        LIMIT 1
 
-        SELECT ID, date, smallCategory, channel,
-            productName, payway, salesCount, salesAmount
-        FROM sales
-        WHERE
-            ID = #{ID} and date = #{date} and productName = #{productName}
 
     </select>
 
-    <select id="checkUploadCommission" parameterType="org.example.domain.Commission" resultType="org.example.domain.Commission">
+    <update id="updateProductIdMapping">
+        UPDATE new_sales_work_20260510
+        SET product_id = #{productId}
+        WHERE id = #{salesId}
+    </update>
 
-        SELECT ID, date, smallCategory, commissionCount, commissionAmount, channel
-        FROM commission
-        WHERE ID = #{ID}
 
+    <select id="findUnmappedBatchByDate"
+            resultType="org.example.dto.sales.response.SalesMappingDto">
+        SELECT
+        id,
+        product_name_raw  AS productNameRaw,
+        product_id        AS productId,
+        unit_price        AS unitPrice,
+        platform,
+        shipping_included AS shippingIncluded,
+        order_date        AS orderDate
+        FROM new_sales_work_20260510
+        WHERE product_id IS NULL
+        AND order_date = #{orderDate}
+        ORDER BY id
     </select>
 
 </mapper>
