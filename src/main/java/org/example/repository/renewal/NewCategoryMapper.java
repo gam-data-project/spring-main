@@ -3,9 +3,9 @@ package org.example.repository.renewal;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.example.dto.renewal.NewCategoryListItemDto;
-import org.example.dto.renewal.NewCategoryOptionDto;
-import org.example.dto.renewal.NewCategorySearchRequestDto;
+import org.example.dto.category.response.NewCategoryListItemDto;
+import org.example.dto.category.response.NewCategoryOptionDto;
+import org.example.dto.category.request.NewCategorySearchRequestDto;
 
 import java.util.List;
 

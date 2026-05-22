@@ -452,6 +452,7 @@
     totalPages: 0,
     totalCount: 0
   };
+  const PAGE_WINDOW_SIZE = 10;
 
   const categoryEl = {
     searchLarge: document.getElementById("searchLargeCategory"),
@@ -683,15 +684,19 @@
       return;
     }
 
+    const currentBlock = Math.floor((currentPage - 1) / PAGE_WINDOW_SIZE);
+    const startPage = currentBlock * PAGE_WINDOW_SIZE + 1;
+    const endPage = Math.min(startPage + PAGE_WINDOW_SIZE - 1, totalPages);
+
     categoryEl.pagination.appendChild(
       createPageItem({
-        label: "이전",
-        page: Math.max(1, currentPage - 1),
-        disabled: currentPage <= 1
+        label: "‹",
+        page: Math.max(1, startPage - 1),
+        disabled: startPage <= 1
       })
     );
 
-    for (let page = 1; page <= totalPages; page += 1) {
+    for (let page = startPage; page <= endPage; page += 1) {
       categoryEl.pagination.appendChild(
         createPageItem({
           label: String(page),
@@ -703,9 +708,9 @@
 
     categoryEl.pagination.appendChild(
       createPageItem({
-        label: "다음",
-        page: Math.min(totalPages, currentPage + 1),
-        disabled: currentPage >= totalPages
+        label: "›",
+        page: Math.min(totalPages, endPage + 1),
+        disabled: endPage >= totalPages
       })
     );
   }

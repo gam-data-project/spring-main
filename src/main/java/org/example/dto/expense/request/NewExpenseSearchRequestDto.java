@@ -1,12 +1,14 @@
-package org.example.dto.renewal;
+package org.example.dto.expense.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 /**
- * 카테고리 목록 조회(페이징) 요청 DTO.
- * 대/중/소 분류 필터와 페이지 정보를 받는다.
+ * 비용 목록 조회(페이징) 요청 DTO.
  */
 @Getter
 @Setter
@@ -14,20 +16,35 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class NewCategorySearchRequestDto {
-    /** 대분류 필터 (ALL/전체면 조건 제외) */
+public class NewExpenseSearchRequestDto {
+
+    private static final int DEFAULT_PAGE_SIZE = 10;
+    private static final int MAX_PAGE_SIZE = 10;
+
+    /** 대분류(요구사항상 고정: 비용) */
     private String largeCategory;
 
-    /** 중분류 필터 (ALL/전체면 조건 제외) */
+    /** 중분류(ALL/전체면 조건 제외) */
     private String mediumCategory;
 
-    /** 소분류 필터 (ALL/전체면 조건 제외) */
+    /** 소분류(ALL/전체면 조건 제외) */
     private String smallCategory;
+
+    /** 유형(ALL/전체면 조건 제외) */
+    private String expenseType;
+
+    /** 시작일(없으면 날짜 하한 조건 제외) */
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate startDate;
+
+    /** 끝일(없으면 날짜 상한 조건 제외) */
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+    private LocalDate endDate;
 
     /** 페이지 번호(1-base) */
     private Integer page;
 
-    /** 페이지 크기 */
+    /** 페이지 크기(기본 10, 최대 10) */
     private Integer size;
 
     /**
@@ -45,8 +62,8 @@ public class NewCategorySearchRequestDto {
      * @return 기본 10, 최대 10으로 고정된 페이지 크기
      */
     public int getSizeOrDefault() {
-        if (size == null || size < 1) return 10;
-        return Math.min(size, 10);
+        if (size == null || size < 1) return DEFAULT_PAGE_SIZE;
+        return Math.min(size, MAX_PAGE_SIZE);
     }
 
     /**

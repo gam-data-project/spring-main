@@ -314,25 +314,25 @@
             <div class="col-md-2">
               <label for="searchLargeCategory" class="form-label">대분류</label>
               <select class="form-select" id="searchLargeCategory">
-                <option value="">전체</option>
+                <option value="비용">비용</option>
               </select>
             </div>
             <div class="col-md-2">
               <label for="searchMediumCategory" class="form-label">중분류</label>
               <select class="form-select" id="searchMediumCategory">
-                <option value="">전체</option>
+                <option value="전체">전체</option>
               </select>
             </div>
             <div class="col-md-2">
               <label for="searchSmallCategory" class="form-label">소분류</label>
               <select class="form-select" id="searchSmallCategory">
-                <option value="">전체</option>
+                <option value="전체">전체</option>
               </select>
             </div>
             <div class="col-md-2">
               <label for="searchPurchaseType" class="form-label">유형</label>
               <select class="form-select" id="searchPurchaseType">
-                <option value="">전체</option>
+                <option value="전체">전체</option>
               </select>
             </div>
             <div class="col-md-4">
@@ -346,7 +346,8 @@
           </div>
 
           <div class="mt-3">
-            <button type="button" class="btn btn-secondary btn-sm" id="btnSearch">조회</button>
+            <button type="button" class="btn btn-secondary btn-sm me-1" id="btnSearch">조회</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btnSearchAll">전체 조회</button>
           </div>
         </form>
 
@@ -380,6 +381,12 @@
               </tr>
             </tbody>
           </table>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <small id="expensePageInfo" class="text-muted">총 0건</small>
+          <nav aria-label="비용 목록 페이지 이동">
+            <ul id="expensePagination" class="pagination pagination-sm mb-0"></ul>
+          </nav>
         </div>
 
         <hr class="my-4">
@@ -419,7 +426,7 @@
             </div>
             <div class="col-md-2">
               <label for="savePurchaseTime" class="form-label">발생시간</label>
-              <input type="time" class="form-control" id="savePurchaseTime">
+              <input type="time" step="1" class="form-control" id="savePurchaseTime">
             </div>
             <div class="col-md-4">
               <label for="saveSupplierName" class="form-label">비용 발생처</label>
@@ -482,7 +489,7 @@
               <tr>
                 <th>날짜</th>
                 <th>시간</th>
-                <th>배용 발생처</th>
+                <th>비용 발생처</th>
                 <th>금액</th>
               </tr>
             </thead>
@@ -496,35 +503,13 @@
             </tbody>
           </table>
         </div>
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <small id="autoPageInfo" class="text-muted">Total 0</small>
+          <nav aria-label="Excel expense paging">
+            <ul id="autoPagination" class="pagination pagination-sm mb-0"></ul>
+          </nav>
+        </div>
 
-        <!-- <div class="table-responsive small">
-          <table class="table table-striped table-sm">
-            <thead>
-              <tr>
-                <th>대분류</th>
-                <th>중분류</th>
-                <th>소분류</th>
-                <th>비용 유형</th>
-                <th>매입처</th>
-                <th class="text-end">단가</th>
-                <th class="text-end">수량</th>
-                <th class="text-end">총금액</th>
-              </tr>
-            </thead>
-            <tbody id="purchaseTableBodyComment">
-              <tr>
-                <td>대분류 예시</td>
-                <td>중분류 예시</td>
-                <td>소분류 예시</td>
-                <td>원재료</td>
-                <td>거래처A</td>
-                <td class="text-end">10,000</td>
-                <td class="text-end">3</td>
-                <td class="text-end">30,000</td>
-              </tr>
-            </tbody>
-          </table>
-        </div> -->
       </div>
     </main>
   </div>
@@ -532,14 +517,53 @@
 <script src="../js/bootstrap.bundle.min.js"></script>
 <script>
   const API = {
-    search: "/renewal/purchases/search",
-    save: "/renewal/purchases",
-    update: (id) => `/renewal/purchases/${id}`,
-    remove: (id) => `/renewal/purchases/${id}`,
-    autoSearch: "/renewal/purchases/auto-search"
+    searchPage: "/renewal/expense/page",
+    searchAllPage: "/renewal/expense/page/all",
+    save: "/renewal/expense",
+    update: (id) => `/renewal/expense/${id}`,
+    remove: (id) => `/renewal/expense/${id}`,
+    autoSearch: "/renewal/expense/excel-search",
+    autoSearchPage: "/renewal/expense/excel-search"
   };
 
-  const state = { selectedId: null };
+  const OPTION_API = {
+    large: "/renewal/expense/options/large",
+    medium: "/renewal/expense/options/medium",
+    small: "/renewal/expense/options/small",
+    types: "/renewal/expense/options/types"
+  };
+
+  const DEFAULTS = {
+    large: "비용",
+    all: "전체"
+  };
+  const SAVE_PLACEHOLDER = "선택";
+  const PAGE_WINDOW_SIZE = 10;
+  const EXPENSE_TYPE_LABELS = {
+    SHIPPING: "택배비",
+    PACKAGING: "박스",
+    MACHINE_RENTAL: "농업기계랜탈",
+    TAX_FREE_FUEL: "면세유",
+    LABOR: "인건비",
+    AGROCHEMICAL: "비료 및 농약",
+    COMMISSION: "수수료",
+    FUEL: "일반 주유비"
+  };
+
+  const state = {
+    selectedId: null,
+    mode: "search",
+    currentPage: 1,
+    size: 10,
+    totalPages: 0,
+    totalCount: 0,
+    rows: [],
+    autoCurrentPage: 1,
+    autoSize: 10,
+    autoTotalPages: 0,
+    autoTotalCount: 0,
+    autoRows: []
+  };
 
   const el = {
     searchLarge: document.getElementById("searchLargeCategory"),
@@ -549,6 +573,7 @@
     searchStartDate: document.getElementById("searchStartDate"),
     searchEndDate: document.getElementById("searchEndDate"),
     btnSearch: document.getElementById("btnSearch"),
+    btnSearchAll: document.getElementById("btnSearchAll"),
     tableBody: document.getElementById("purchaseTableBody"),
     purchaseId: document.getElementById("purchaseId"),
     saveLarge: document.getElementById("saveLargeCategory"),
@@ -571,106 +596,543 @@
     autoUploadFileName: document.getElementById("autoUploadFileName"),
     autoUploadFile: document.getElementById("autoUploadFile"),
     btnAutoUpload: document.getElementById("btnAutoUpload"),
-    autoResultBody: document.getElementById("autoResultBody")
+    autoResultBody: document.getElementById("autoResultBody"),
+    autoPagination: document.getElementById("autoPagination"),
+    autoPageInfo: document.getElementById("autoPageInfo"),
+    pagination: document.getElementById("expensePagination"),
+    pageInfo: document.getElementById("expensePageInfo")
   };
 
   const toNumber = (v) => Number(v || 0);
   const won = (v) => toNumber(v).toLocaleString();
 
-  function recalcTotal() {
-    el.saveTotal.value = toNumber(el.saveUnitCost.value) * toNumber(el.saveQty.value);
+  function normalize(value) {
+    return String(value ?? "").trim();
+  }
+
+  function extractOptionValue(item) {
+    if (typeof item === "string") return normalize(item);
+    if (item && typeof item === "object") {
+      return normalize(item.value ?? item.name ?? "");
+    }
+    return "";
   }
 
   function buildQuery(params) {
     const q = new URLSearchParams();
     Object.entries(params).forEach(([k, v]) => {
-      if (v !== null && v !== undefined && String(v).trim() !== "") q.append(k, v);
+      const value = normalize(v);
+      if (value) q.append(k, value);
     });
     return q.toString();
   }
 
-  async function fetchJson(url, options = {}) {
-    const res = await fetch(url, {
-      headers: { "Content-Type": "application/json" },
-      ...options
-    });
-    if (!res.ok) throw new Error(`요청 실패 (${res.status})`);
-    if (res.status === 204) return null;
-    return res.json();
+  function resetSelect(selectEl, placeholder = DEFAULTS.all) {
+    selectEl.innerHTML = `<option value="${placeholder}">${placeholder}</option>`;
+    selectEl.value = placeholder;
   }
 
-  function fillForm(row) {
-    state.selectedId = row.id;
-    el.purchaseId.value = row.id ?? "";
-    el.saveDate.value = row.purchaseDate ?? "";
-    el.saveTime.value = row.purchaseTime ?? "";
-    el.saveSupplier.value = row.supplierName ?? "";
-    el.saveUnitCost.value = row.unitCost ?? 0;
-    el.saveQty.value = row.quantity ?? 0;
-    el.saveTotal.value = row.totalCost ?? 0;
+  function toExpenseTypeLabel(code) {
+    const key = normalize(code).replaceAll(" ", "").toUpperCase();
+    return EXPENSE_TYPE_LABELS[key] ?? normalize(code);
+  }
+
+  function setSelectOptions(
+    selectEl,
+    values,
+    placeholder = DEFAULTS.all,
+    labelMapper = (value) => value
+  ) {
+    const current = normalize(selectEl.value);
+    resetSelect(selectEl, placeholder);
+
+    const uniqueValues = Array.from(
+      new Set((values || []).map(extractOptionValue).filter(Boolean))
+    );
+
+    uniqueValues.forEach((value) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = labelMapper(value);
+      selectEl.appendChild(option);
+    });
+
+    if (uniqueValues.includes(current)) {
+      selectEl.value = current;
+    } else {
+      selectEl.value = placeholder;
+    }
+  }
+
+  async function requestJson(url, options = {}) {
+    const fetchOptions = { ...options };
+    if (!fetchOptions.method) fetchOptions.method = "GET";
+    if (fetchOptions.body) {
+      fetchOptions.headers = {
+        "Content-Type": "application/json",
+        ...(fetchOptions.headers || {})
+      };
+    }
+
+    const res = await fetch(url, fetchOptions);
+    if (!res.ok) {
+      throw new Error(`요청 실패 (${res.status})`);
+    }
+
+    const contentType = res.headers.get("content-type") || "";
+    if (contentType.includes("application/json")) {
+      return await res.json();
+    }
+    return null;
+  }
+
+  async function loadSearchLargeOptions() {
+    const rows = await requestJson(OPTION_API.large);
+    const values = Array.from(new Set((rows || []).map(extractOptionValue).filter(Boolean)));
+    const options = values.length ? values : [DEFAULTS.large];
+
+    el.searchLarge.innerHTML = "";
+    options.forEach((value) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      el.searchLarge.appendChild(option);
+    });
+    el.searchLarge.value = options.includes(DEFAULTS.large) ? DEFAULTS.large : options[0];
+  }
+
+  async function loadSearchMediumOptions() {
+    const largeCategory = normalize(el.searchLarge.value) || DEFAULTS.large;
+
+    resetSelect(el.searchMedium, DEFAULTS.all);
+    resetSelect(el.searchSmall, DEFAULTS.all);
+    resetSelect(el.searchType, DEFAULTS.all);
+
+    const query = buildQuery({ largeCategory });
+    const rows = await requestJson(`${OPTION_API.medium}?${query}`);
+    setSelectOptions(el.searchMedium, rows, DEFAULTS.all);
+    el.searchMedium.value = DEFAULTS.all;
+  }
+
+  async function loadSearchSmallOptions() {
+    const largeCategory = normalize(el.searchLarge.value) || DEFAULTS.large;
+    const mediumCategory = normalize(el.searchMedium.value) || DEFAULTS.all;
+
+    resetSelect(el.searchSmall, DEFAULTS.all);
+    resetSelect(el.searchType, DEFAULTS.all);
+
+    if (mediumCategory === DEFAULTS.all) {
+      return;
+    }
+
+    const query = buildQuery({ largeCategory, mediumCategory });
+    const rows = await requestJson(`${OPTION_API.small}?${query}`);
+    setSelectOptions(el.searchSmall, rows, DEFAULTS.all);
+    el.searchSmall.value = DEFAULTS.all;
+  }
+
+  async function loadSearchTypeOptions() {
+    const largeCategory = normalize(el.searchLarge.value) || DEFAULTS.large;
+    const mediumCategory = normalize(el.searchMedium.value) || DEFAULTS.all;
+    const smallCategory = normalize(el.searchSmall.value) || DEFAULTS.all;
+
+    resetSelect(el.searchType, DEFAULTS.all);
+
+    if (mediumCategory === DEFAULTS.all || smallCategory === DEFAULTS.all) {
+      return;
+    }
+
+    const query = buildQuery({ largeCategory, mediumCategory, smallCategory });
+    const rows = await requestJson(`${OPTION_API.types}?${query}`);
+    setSelectOptions(el.searchType, rows, DEFAULTS.all, toExpenseTypeLabel);
+    el.searchType.value = DEFAULTS.all;
+  }
+
+  function isSavePlaceholder(value) {
+    const v = normalize(value);
+    return !v || v === SAVE_PLACEHOLDER;
+  }
+
+  async function loadSaveLargeOptions() {
+    const rows = await requestJson(OPTION_API.large);
+    const values = Array.from(new Set((rows || []).map(extractOptionValue).filter(Boolean)));
+    const options = values.length ? values : [DEFAULTS.large];
+
+    el.saveLarge.innerHTML = "";
+    options.forEach((value) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      el.saveLarge.appendChild(option);
+    });
+    el.saveLarge.value = options.includes(DEFAULTS.large) ? DEFAULTS.large : options[0];
+  }
+
+  async function loadSaveMediumOptions() {
+    const largeCategory = normalize(el.saveLarge.value) || DEFAULTS.large;
+
+    resetSelect(el.saveMedium, SAVE_PLACEHOLDER);
+    resetSelect(el.saveSmall, SAVE_PLACEHOLDER);
+    resetSelect(el.saveType, SAVE_PLACEHOLDER);
+
+    const query = buildQuery({ largeCategory });
+    const rows = await requestJson(`${OPTION_API.medium}?${query}`);
+    setSelectOptions(el.saveMedium, rows, SAVE_PLACEHOLDER);
+    el.saveMedium.value = SAVE_PLACEHOLDER;
+  }
+
+  async function loadSaveSmallOptions() {
+    const largeCategory = normalize(el.saveLarge.value) || DEFAULTS.large;
+    const mediumCategory = normalize(el.saveMedium.value);
+
+    resetSelect(el.saveSmall, SAVE_PLACEHOLDER);
+    resetSelect(el.saveType, SAVE_PLACEHOLDER);
+
+    if (isSavePlaceholder(mediumCategory)) {
+      return;
+    }
+
+    const query = buildQuery({ largeCategory, mediumCategory });
+    const rows = await requestJson(`${OPTION_API.small}?${query}`);
+    setSelectOptions(el.saveSmall, rows, SAVE_PLACEHOLDER);
+    el.saveSmall.value = SAVE_PLACEHOLDER;
+  }
+
+  async function loadSaveTypeOptions() {
+    const largeCategory = normalize(el.saveLarge.value) || DEFAULTS.large;
+    const mediumCategory = normalize(el.saveMedium.value);
+    const smallCategory = normalize(el.saveSmall.value);
+
+    resetSelect(el.saveType, SAVE_PLACEHOLDER);
+
+    if (isSavePlaceholder(mediumCategory) || isSavePlaceholder(smallCategory)) {
+      return;
+    }
+
+    const query = buildQuery({ largeCategory, mediumCategory, smallCategory });
+    const rows = await requestJson(`${OPTION_API.types}?${query}`);
+    setSelectOptions(el.saveType, rows, SAVE_PLACEHOLDER, toExpenseTypeLabel);
+    el.saveType.value = SAVE_PLACEHOLDER;
+  }
+
+  function setSelectValueIfExists(selectEl, value, fallback = SAVE_PLACEHOLDER) {
+    const target = normalize(value);
+    const hasValue = Array.from(selectEl.options).some((option) => option.value === target);
+    selectEl.value = hasValue ? target : fallback;
+  }
+
+  function toTimeInputValue(value) {
+    const raw = normalize(value);
+    if (!raw) return "";
+    if (/^\d{2}:\d{2}:\d{2}$/.test(raw)) return raw;
+    return raw.length >= 5 ? raw.slice(0, 5) : raw;
+  }
+
+  function clearSaveForm(keepSelected = false) {
+    if (!keepSelected) {
+      state.selectedId = null;
+      el.purchaseId.value = "";
+    }
+
+    el.saveDate.value = "";
+    el.saveTime.value = "";
+    el.saveSupplier.value = "";
+    el.saveUnitCost.value = "";
+    el.saveQty.value = "";
+    el.saveTotal.value = "";
+  }
+
+  async function applyRowToSaveForm(row) {
+    const largeCategory = normalize(row.largeCategory ?? row.large_category ?? DEFAULTS.large) || DEFAULTS.large;
+    const mediumCategory = normalize(row.mediumCategory ?? row.medium_category);
+    const smallCategory = normalize(row.smallCategory ?? row.small_category);
+    const expenseType = normalize(row.expenseType ?? row.expense_type);
+
+    state.selectedId = Number(row.id ?? 0) || null;
+    el.purchaseId.value = state.selectedId ?? "";
+
+    await loadSaveLargeOptions();
+    setSelectValueIfExists(el.saveLarge, largeCategory, DEFAULTS.large);
+
+    await loadSaveMediumOptions();
+    setSelectValueIfExists(el.saveMedium, mediumCategory, SAVE_PLACEHOLDER);
+
+    await loadSaveSmallOptions();
+    setSelectValueIfExists(el.saveSmall, smallCategory, SAVE_PLACEHOLDER);
+
+    await loadSaveTypeOptions();
+    setSelectValueIfExists(el.saveType, expenseType, SAVE_PLACEHOLDER);
+
+    el.saveDate.value = normalize(row.expenseDate ?? row.expense_date ?? row.purchaseDate);
+    el.saveTime.value = toTimeInputValue(row.expenseTime ?? row.expense_time ?? row.purchaseTime);
+    el.saveSupplier.value = normalize(row.description ?? row.supplierName);
+    el.saveUnitCost.value = toNumber(row.unitCost ?? row.unit_cost);
+    el.saveQty.value = toNumber(row.quantity);
+    el.saveTotal.value = toNumber(row.totalCost ?? row.total_cost);
+  }
+
+  function getSearchFilters() {
+    return {
+      largeCategory: normalize(el.searchLarge.value) || DEFAULTS.large,
+      mediumCategory: normalize(el.searchMedium.value) || DEFAULTS.all,
+      smallCategory: normalize(el.searchSmall.value) || DEFAULTS.all,
+      expenseType: normalize(el.searchType.value) || DEFAULTS.all,
+      startDate: normalize(el.searchStartDate.value),
+      endDate: normalize(el.searchEndDate.value)
+    };
+  }
+
+  function recalcTotal() {
+    el.saveTotal.value = toNumber(el.saveUnitCost.value) * toNumber(el.saveQty.value);
   }
 
   function renderRows(rows) {
     el.tableBody.innerHTML = "";
+    if (!rows.length) {
+      el.tableBody.innerHTML = '<tr><td colspan="8">조회 결과가 없습니다.</td></tr>';
+      return;
+    }
+
     rows.forEach((row) => {
       const tr = document.createElement("tr");
       tr.style.cursor = "pointer";
       tr.innerHTML = `
-        <td>${row.largeCategoryName ?? "-"}</td>
-        <td>${row.mediumCategoryName ?? "-"}</td>
-        <td>${row.smallCategoryName ?? "-"}</td>
-        <td>${row.purchaseTypeName ?? "-"}</td>
-        <td>${row.supplierName ?? "-"}</td>
-        <td class="text-end">${won(row.unitCost)}</td>
+        <td>${row.largeCategory ?? row.large_category ?? "-"}</td>
+        <td>${row.mediumCategory ?? row.medium_category ?? "-"}</td>
+        <td>${row.smallCategory ?? row.small_category ?? "-"}</td>
+        <td>${toExpenseTypeLabel(row.expenseType ?? row.expense_type ?? "-")}</td>
+        <td>${row.description ?? row.supplierName ?? "-"}</td>
+        <td class="text-end">${won(row.unitCost ?? row.unit_cost)}</td>
         <td class="text-end">${won(row.quantity)}</td>
-        <td class="text-end">${won(row.totalCost)}</td>
+        <td class="text-end">${won(row.totalCost ?? row.total_cost)}</td>
       `;
-      tr.addEventListener("click", () => fillForm(row));
+      tr.addEventListener("click", async () => {
+        try {
+          await applyRowToSaveForm(row);
+        } catch (error) {
+          alert(error.message || "선택 항목 반영에 실패했습니다.");
+        }
+      });
       el.tableBody.appendChild(tr);
     });
   }
 
   function getPayload() {
     return {
-      id: el.purchaseId.value ? Number(el.purchaseId.value) : null,
-      largeCategoryId: el.saveLarge.value ? Number(el.saveLarge.value) : null,
-      mediumCategoryId: el.saveMedium.value ? Number(el.saveMedium.value) : null,
-      smallCategoryId: el.saveSmall.value ? Number(el.saveSmall.value) : null,
-      purchaseType: el.saveType.value,
-      purchaseDate: el.saveDate.value,
-      purchaseTime: el.saveTime.value || null,
-      supplierName: el.saveSupplier.value.trim(),
+      largeCategory: normalize(el.saveLarge.value) || DEFAULTS.large,
+      mediumCategory: normalize(el.saveMedium.value),
+      smallCategory: normalize(el.saveSmall.value),
+      expenseType: normalize(el.saveType.value),
+      expenseDate: normalize(el.saveDate.value),
+      expenseTime: normalize(el.saveTime.value) || null,
+      description: normalize(el.saveSupplier.value),
       unitCost: toNumber(el.saveUnitCost.value),
       quantity: toNumber(el.saveQty.value),
       totalCost: toNumber(el.saveTotal.value)
     };
   }
 
-  async function search() {
-    try {
-      const query = buildQuery({
-        largeCategoryId: el.searchLarge.value,
-        mediumCategoryId: el.searchMedium.value,
-        smallCategoryId: el.searchSmall.value,
-        purchaseType: el.searchType.value,
-        startDate: el.searchStartDate.value,
-        endDate: el.searchEndDate.value
-      });
-
-      const url = query ? `${API.search}?${query}` : API.search;
-      const data = await fetchJson(url);
-      renderRows(Array.isArray(data) ? data : (data.items ?? []));
-    } catch (error) {
-      alert(error.message);
+  function validateSavePayload(payload) {
+    if (payload.largeCategory !== DEFAULTS.large) {
+      return "대분류는 비용만 선택할 수 있습니다.";
     }
+    if (isSavePlaceholder(payload.mediumCategory)) {
+      return "중분류를 선택해 주세요.";
+    }
+    if (isSavePlaceholder(payload.smallCategory)) {
+      return "소분류를 선택해 주세요.";
+    }
+    if (isSavePlaceholder(payload.expenseType)) {
+      return "유형을 선택해 주세요.";
+    }
+    if (!payload.expenseDate) {
+      return "발생일을 입력해 주세요.";
+    }
+    if (!payload.description) {
+      return "비용 발생처를 입력해 주세요.";
+    }
+    if (payload.totalCost < 0) {
+      return "총금액은 0 이상이어야 합니다.";
+    }
+    return "";
+  }
+
+  function ensureCommandSuccess(response, fallbackMessage) {
+    if (!response) {
+      throw new Error(fallbackMessage);
+    }
+
+    if (response.success === false) {
+      throw new Error(response.message || fallbackMessage);
+    }
+
+    return response;
+  }
+
+  function renderPageInfo() {
+    if (!el.pageInfo) return;
+    if (state.totalCount === 0) {
+      el.pageInfo.textContent = "총 0건";
+      return;
+    }
+    el.pageInfo.textContent =
+      `총 ${state.totalCount}건 · ${state.currentPage}/${state.totalPages} 페이지`;
+  }
+
+  function createPageItem({ label, page, disabled = false, active = false }) {
+    const li = document.createElement("li");
+    li.className = `page-item${disabled ? " disabled" : ""}${active ? " active" : ""}`;
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "page-link";
+    button.textContent = label;
+
+    if (!disabled && !active) {
+      button.addEventListener("click", async () => {
+        try {
+          if (state.mode === "all") {
+            await fetchAllPage(page);
+          } else {
+            await fetchSearchPage(page);
+          }
+        } catch (error) {
+          alert(error.message || "페이지 조회에 실패했습니다.");
+        }
+      });
+    }
+
+    li.appendChild(button);
+    return li;
+  }
+
+  function renderPagination() {
+    if (!el.pagination) return;
+    el.pagination.innerHTML = "";
+
+    if (!state.totalPages || state.totalPages < 1) {
+      return;
+    }
+
+    const currentBlock = Math.floor((state.currentPage - 1) / PAGE_WINDOW_SIZE);
+    const startPage = currentBlock * PAGE_WINDOW_SIZE + 1;
+    const endPage = Math.min(startPage + PAGE_WINDOW_SIZE - 1, state.totalPages);
+
+    el.pagination.appendChild(
+      createPageItem({
+        label: "‹",
+        page: Math.max(1, startPage - 1),
+        disabled: startPage <= 1
+      })
+    );
+
+    for (let page = startPage; page <= endPage; page += 1) {
+      el.pagination.appendChild(
+        createPageItem({
+          label: String(page),
+          page,
+          active: page === state.currentPage
+        })
+      );
+    }
+
+    el.pagination.appendChild(
+      createPageItem({
+        label: "›",
+        page: Math.min(state.totalPages, endPage + 1),
+        disabled: endPage >= state.totalPages
+      })
+    );
+  }
+
+  function renderPagedResult(response, fallbackPage) {
+    const items = Array.isArray(response?.items) ? response.items : [];
+    const totalCount = Number(response?.totalCount ?? response?.total_count ?? 0);
+    const totalPages = Number(response?.totalPages ?? response?.total_pages ?? 0);
+    const currentPage = Number(response?.page ?? fallbackPage);
+
+    state.rows = items;
+    state.totalCount = Number.isFinite(totalCount) ? totalCount : 0;
+    state.totalPages = Number.isFinite(totalPages) ? totalPages : 0;
+    state.currentPage = Number.isFinite(currentPage) ? currentPage : fallbackPage;
+
+    renderRows(state.rows);
+    renderPageInfo();
+    renderPagination();
+  }
+
+  async function fetchSearchPage(page = 1) {
+    const filters = getSearchFilters();
+    const query = buildQuery({
+      largeCategory: filters.largeCategory,
+      mediumCategory: filters.mediumCategory,
+      smallCategory: filters.smallCategory,
+      expenseType: filters.expenseType,
+      startDate: filters.startDate,
+      endDate: filters.endDate,
+      page,
+      size: state.size
+    });
+
+    const response = await requestJson(`${API.searchPage}?${query}`);
+    renderPagedResult(response, page);
+  }
+
+  async function fetchAllPage(page = 1) {
+    const query = buildQuery({
+      page,
+      size: state.size
+    });
+
+    const url = query ? `${API.searchAllPage}?${query}` : API.searchAllPage;
+    const response = await requestJson(url);
+    renderPagedResult(response, page);
+  }
+
+  async function search() {
+    state.mode = "search";
+    await fetchSearchPage(1);
+  }
+
+  async function searchAll() {
+    state.mode = "all";
+    el.searchStartDate.value = "";
+    el.searchEndDate.value = "";
+    el.searchLarge.value = DEFAULTS.large;
+    await loadSearchMediumOptions();
+    resetSelect(el.searchSmall, DEFAULTS.all);
+    resetSelect(el.searchType, DEFAULTS.all);
+    await fetchAllPage(1);
+  }
+
+  async function refreshCurrentPage() {
+    if (state.mode === "all") {
+      await fetchAllPage(state.currentPage || 1);
+      return;
+    }
+    await fetchSearchPage(state.currentPage || 1);
   }
 
   async function save() {
     try {
       const payload = getPayload();
-      await fetchJson(API.save, { method: "POST", body: JSON.stringify(payload) });
-      await search();
-      alert("입력되었습니다.");
+      const validationError = validateSavePayload(payload);
+      if (validationError) {
+        alert(validationError);
+        return;
+      }
+
+      const response = await requestJson(API.save, {
+        method: "POST",
+        body: JSON.stringify(payload)
+      });
+      const result = ensureCommandSuccess(response, "입력에 실패했습니다.");
+
+      clearSaveForm();
+      await loadSaveLargeOptions();
+      await loadSaveMediumOptions();
+      await refreshCurrentPage();
+      alert(result.message || "입력 완료");
     } catch (error) {
       alert(error.message);
     }
@@ -683,28 +1145,44 @@
         return;
       }
       const payload = getPayload();
-      await fetchJson(API.update(state.selectedId), {
+      const validationError = validateSavePayload(payload);
+      if (validationError) {
+        alert(validationError);
+        return;
+      }
+
+      const response = await requestJson(API.update(state.selectedId), {
         method: "PUT",
         body: JSON.stringify(payload)
       });
-      await search();
-      alert("수정되었습니다.");
+      const result = ensureCommandSuccess(response, "수정에 실패했습니다.");
+
+      await refreshCurrentPage();
+      alert(result.message || "수정 완료");
     } catch (error) {
       alert(error.message);
     }
   }
 
-  async function removePurchase() {
+  async function removeExpense() {
     try {
       if (!state.selectedId) {
         alert("삭제할 항목을 목록에서 먼저 선택하세요.");
         return;
       }
-      await fetchJson(API.remove(state.selectedId), { method: "DELETE" });
-      state.selectedId = null;
-      el.purchaseId.value = "";
-      await search();
-      alert("삭제되었습니다.");
+
+      if (!confirm("선택한 비용 데이터를 삭제할까요?")) {
+        return;
+      }
+
+      const response = await requestJson(API.remove(state.selectedId), { method: "DELETE" });
+      const result = ensureCommandSuccess(response, "삭제에 실패했습니다.");
+
+      clearSaveForm();
+      await loadSaveLargeOptions();
+      await loadSaveMediumOptions();
+      await refreshCurrentPage();
+      alert(result.message || "삭제 완료");
     } catch (error) {
       alert(error.message);
     }
@@ -729,11 +1207,18 @@
       const data = await res.json();
       const rows = Array.isArray(data) ? data : (data.items ?? []);
       el.autoResultBody.innerHTML = "";
+
+      if (!rows.length) {
+        el.autoResultBody.innerHTML = '<tr><td colspan="4">조회 결과가 없습니다.</td></tr>';
+        return;
+      }
+
       rows.forEach((row) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td>${row.purchaseDate ?? row.date ?? "-"}</td>
-          <td>${row.supplierName ?? row.vendorName ?? "-"}</td>
+          <td>${row.expenseDate ?? row.purchaseDate ?? row.date ?? "-"}</td>
+          <td>${row.expenseTime ?? row.purchaseTime ?? row.time ?? "-"}</td>
+          <td>${row.description ?? row.supplierName ?? row.vendorName ?? "-"}</td>
           <td class="text-end">${won(row.totalCost ?? row.amount ?? 0)}</td>
         `;
         el.autoResultBody.appendChild(tr);
@@ -746,9 +1231,10 @@
   el.saveUnitCost.addEventListener("input", recalcTotal);
   el.saveQty.addEventListener("input", recalcTotal);
   el.btnSearch.addEventListener("click", search);
+  el.btnSearchAll.addEventListener("click", searchAll);
   el.btnSave.addEventListener("click", save);
   el.btnUpdate.addEventListener("click", update);
-  el.btnDelete.addEventListener("click", removePurchase);
+  el.btnDelete.addEventListener("click", removeExpense);
   el.btnAutoSearch.addEventListener("click", autoSearch);
   el.autoUploadFileName.addEventListener("click", () => el.autoUploadFile.click());
   el.autoUploadFile.addEventListener("change", () => {
@@ -756,7 +1242,261 @@
     el.autoUploadFileName.value = file ? file.name : "";
   });
   el.btnAutoUpload.addEventListener("click", () => el.autoUploadFile.click());
-  search();
+
+  el.searchLarge.addEventListener("change", async () => {
+    try {
+      await loadSearchMediumOptions();
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  el.searchMedium.addEventListener("change", async () => {
+    try {
+      await loadSearchSmallOptions();
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  el.searchSmall.addEventListener("change", async () => {
+    try {
+      await loadSearchTypeOptions();
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  el.saveLarge.addEventListener("change", async () => {
+    try {
+      state.selectedId = null;
+      el.purchaseId.value = "";
+      await loadSaveMediumOptions();
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  el.saveMedium.addEventListener("change", async () => {
+    try {
+      state.selectedId = null;
+      el.purchaseId.value = "";
+      await loadSaveSmallOptions();
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  el.saveSmall.addEventListener("change", async () => {
+    try {
+      state.selectedId = null;
+      el.purchaseId.value = "";
+      await loadSaveTypeOptions();
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  (async function initExpensePage() {
+    try {
+      await loadSearchLargeOptions();
+      await loadSearchMediumOptions();
+      await loadSaveLargeOptions();
+      await loadSaveMediumOptions();
+      state.mode = "search";
+      await fetchSearchPage(1);
+    } catch (error) {
+      alert(error.message);
+    }
+  })();
+</script>
+<script>
+  (function () {
+    const excelApiUrl = "/renewal/expense/excel-search";
+    const PAGE_WINDOW_SIZE = 10;
+    const excelState = {
+      page: 1,
+      size: 10,
+      totalPages: 0,
+      totalCount: 0,
+      rows: []
+    };
+
+    const excelEl = {
+      startDate: document.getElementById("autoStartDate"),
+      endDate: document.getElementById("autoEndDate"),
+      description: document.getElementById("autoSupplierName"),
+      uploadFileName: document.getElementById("autoUploadFileName"),
+      uploadFile: document.getElementById("autoUploadFile"),
+      btnUpload: document.getElementById("btnAutoUpload"),
+      btnSearch: document.getElementById("btnAutoSearch"),
+      resultBody: document.getElementById("autoResultBody"),
+      pageInfo: document.getElementById("autoPageInfo"),
+      pagination: document.getElementById("autoPagination")
+    };
+
+    if (!excelEl.btnSearch || !excelEl.uploadFile || !excelEl.resultBody) return;
+
+    const oldBtn = excelEl.btnSearch;
+    const newBtn = oldBtn.cloneNode(true);
+    oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+    excelEl.btnSearch = newBtn;
+
+    const toNumber = (v) => Number(v || 0);
+    const won = (v) => toNumber(v).toLocaleString();
+
+    function renderRows(rows) {
+      excelEl.resultBody.innerHTML = "";
+
+      if (!rows.length) {
+        excelEl.resultBody.innerHTML = '<tr><td colspan="4">조회 결과가 없습니다.</td></tr>';
+        return;
+      }
+
+      rows.forEach((row) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row.expenseDate ?? "-"}</td>
+          <td>${row.expenseTime ?? "-"}</td>
+          <td>${row.description ?? "-"}</td>
+          <td class="text-end">${won(row.totalCost ?? 0)}</td>
+        `;
+        excelEl.resultBody.appendChild(tr);
+      });
+    }
+
+    function renderPageInfo() {
+      if (!excelEl.pageInfo) return;
+      if (excelState.totalCount === 0) {
+        excelEl.pageInfo.textContent = "Total 0";
+        return;
+      }
+      excelEl.pageInfo.textContent = `Total ${excelState.totalCount} · ${excelState.page}/${excelState.totalPages} page`;
+    }
+
+    function createPageItem({ label, page, disabled = false, active = false }) {
+      const li = document.createElement("li");
+      li.className = `page-item${disabled ? " disabled" : ""}${active ? " active" : ""}`;
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "page-link";
+      button.textContent = label;
+
+      if (!disabled && !active) {
+        button.addEventListener("click", async () => {
+          try {
+            await fetchExcelPage(page);
+          } catch (error) {
+            alert(error.message || "페이지 조회 중 오류가 발생했습니다.");
+          }
+        });
+      }
+
+      li.appendChild(button);
+      return li;
+    }
+
+    function renderPagination() {
+      if (!excelEl.pagination) return;
+      excelEl.pagination.innerHTML = "";
+
+      if (!excelState.totalPages || excelState.totalPages < 1) return;
+
+      const currentBlock = Math.floor((excelState.page - 1) / PAGE_WINDOW_SIZE);
+      const startPage = currentBlock * PAGE_WINDOW_SIZE + 1;
+      const endPage = Math.min(startPage + PAGE_WINDOW_SIZE - 1, excelState.totalPages);
+
+      excelEl.pagination.appendChild(
+        createPageItem({
+          label: "<",
+          page: Math.max(1, startPage - 1),
+          disabled: startPage <= 1
+        })
+      );
+
+      for (let page = startPage; page <= endPage; page += 1) {
+        excelEl.pagination.appendChild(
+          createPageItem({
+            label: String(page),
+            page,
+            active: page === excelState.page
+          })
+        );
+      }
+
+      excelEl.pagination.appendChild(
+        createPageItem({
+          label: ">",
+          page: Math.min(excelState.totalPages, endPage + 1),
+          disabled: endPage >= excelState.totalPages
+        })
+      );
+    }
+
+    function renderPagedResult(data, fallbackPage) {
+      const items = Array.isArray(data?.items) ? data.items : [];
+      const totalCount = Number(data?.totalCount ?? data?.total_count ?? 0);
+      const totalPages = Number(data?.totalPages ?? data?.total_pages ?? 0);
+      const currentPage = Number(data?.page ?? fallbackPage);
+
+      excelState.rows = items;
+      excelState.totalCount = Number.isFinite(totalCount) ? totalCount : 0;
+      excelState.totalPages = Number.isFinite(totalPages) ? totalPages : 0;
+      excelState.page = Number.isFinite(currentPage) ? currentPage : fallbackPage;
+
+      renderRows(excelState.rows);
+      renderPageInfo();
+      renderPagination();
+    }
+
+    async function fetchExcelPage(page = 1) {
+      if (!excelEl.uploadFile.files.length) {
+        alert("엑셀 파일을 먼저 선택해 주세요.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", excelEl.uploadFile.files[0]);
+      formData.append("startDate", excelEl.startDate.value);
+      formData.append("endDate", excelEl.endDate.value);
+      formData.append("description", excelEl.description.value.trim());
+      formData.append("page", String(page));
+
+      const res = await fetch(excelApiUrl, {
+        method: "POST",
+        body: formData
+      });
+
+      if (!res.ok) {
+        throw new Error(`요청 실패 (${res.status})`);
+      }
+
+      const data = await res.json();
+      renderPagedResult(data, page);
+    }
+
+    excelEl.btnSearch.addEventListener("click", async () => {
+      try {
+        await fetchExcelPage(1);
+      } catch (error) {
+        alert(error.message);
+      }
+    });
+
+    if (excelEl.uploadFileName) {
+      excelEl.uploadFileName.addEventListener("click", () => excelEl.uploadFile.click());
+    }
+    if (excelEl.btnUpload) {
+      excelEl.btnUpload.addEventListener("click", () => excelEl.uploadFile.click());
+    }
+    excelEl.uploadFile.addEventListener("change", () => {
+      const file = excelEl.uploadFile.files[0];
+      if (excelEl.uploadFileName) {
+        excelEl.uploadFileName.value = file ? file.name : "";
+      }
+    });
+  })();
 </script>
 
     <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script><script src="dashboard.js"></script> -->

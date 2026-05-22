@@ -1,4 +1,4 @@
-package org.example.dto.renewal;
+package org.example.dto.expense.response;
 
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -8,7 +8,7 @@ import lombok.*;
 import java.util.List;
 
 /**
- * 카테고리 목록 페이징 응답 DTO.
+ * 비용 목록 페이징 응답 DTO.
  */
 @Getter
 @Setter
@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class NewCategoryPageResponseDto {
+public class NewExpensePageResponseDto {
     /** 현재 페이지(1-base) */
     private Integer page;
 
@@ -30,5 +30,5 @@ public class NewCategoryPageResponseDto {
     private Long totalPages;
 
     /** 현재 페이지 데이터 */
-    private List<NewCategoryListItemDto> items;
+    private List<NewExpenseListItemDto> items;
 }

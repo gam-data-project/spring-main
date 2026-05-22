@@ -1,19 +1,21 @@
-package org.example.dto.renewal;
+package org.example.dto.category.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
-/**
- * 카테고리 생성 요청 DTO.
- */
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class NewCategoryUpsertRequestDto {
+public class NewCategoryListItemDto {
+    /** PK */
+    private Long id;
+
     /** 대분류 */
     private String largeCategory;
 
@@ -22,4 +24,10 @@ public class NewCategoryUpsertRequestDto {
 
     /** 소분류 */
     private String smallCategory;
+
+    /** 생성일시 */
+    private LocalDateTime createdAt;
+
+    /** 수정일시 */
+    private LocalDateTime updatedAt;
 }

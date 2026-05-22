@@ -6,7 +6,7 @@
 
     <!-- 대분류 유니크 목록 조회 -->
     <select id="selectDistinctLargeCategories"
-            resultType="org.example.dto.renewal.NewCategoryOptionDto">
+            resultType="org.example.dto.category.response.NewCategoryOptionDto">
         SELECT DISTINCT large_category AS value
         FROM new_category
         ORDER BY large_category
@@ -15,7 +15,7 @@
     <!-- 대분류 기준 중분류 유니크 목록 조회 -->
     <select id="selectDistinctMediumCategoriesByLarge"
             parameterType="string"
-            resultType="org.example.dto.renewal.NewCategoryOptionDto">
+            resultType="org.example.dto.category.response.NewCategoryOptionDto">
         SELECT DISTINCT medium_category AS value
         FROM new_category
         WHERE large_category = #{largeCategory}
@@ -24,7 +24,7 @@
 
     <!-- 대분류+중분류 기준 소분류 유니크 목록 조회 -->
     <select id="selectDistinctSmallCategoriesByLargeMedium"
-            resultType="org.example.dto.renewal.NewCategoryOptionDto">
+            resultType="org.example.dto.category.response.NewCategoryOptionDto">
         SELECT DISTINCT small_category AS value
         FROM new_category
         WHERE large_category = #{largeCategory}
@@ -62,7 +62,7 @@
 
     <!-- 페이징 목록 조회 -->
     <select id="selectCategoryPage"
-            resultType="org.example.dto.renewal.NewCategoryListItemDto">
+            resultType="org.example.dto.category.response.NewCategoryListItemDto">
         SELECT
         id,
         large_category AS largeCategory,

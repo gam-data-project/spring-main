@@ -1,7 +1,12 @@
 package org.example.service.renewal;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.renewal.*;
+import org.example.dto.category.request.NewCategorySearchRequestDto;
+import org.example.dto.category.request.NewCategoryUpsertRequestDto;
+import org.example.dto.category.response.NewCategoryCommandResponseDto;
+import org.example.dto.category.response.NewCategoryListItemDto;
+import org.example.dto.category.response.NewCategoryOptionDto;
+import org.example.dto.category.response.NewCategoryPageResponseDto;
 import org.example.repository.renewal.NewCategoryMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

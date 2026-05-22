@@ -1,7 +1,11 @@
 package org.example.controller.renewal;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.renewal.*;
+import org.example.dto.category.request.NewCategorySearchRequestDto;
+import org.example.dto.category.request.NewCategoryUpsertRequestDto;
+import org.example.dto.category.response.NewCategoryCommandResponseDto;
+import org.example.dto.category.response.NewCategoryOptionDto;
+import org.example.dto.category.response.NewCategoryPageResponseDto;
 import org.example.service.renewal.NewCategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

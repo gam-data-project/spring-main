@@ -1,4 +1,4 @@
-package org.example.dto.renewal;
+package org.example.dto.category.response;
 
 
 import lombok.*;
