@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="ko" data-bs-theme="auto">
+<head>
+  <script src="../js/color-modes.js"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="정산 리포트 대시보드">
+  <title>정산 리포트</title>
+
+  <link href="../css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../css/dashboard.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --report-accent: #e85d75;
+      --report-accent-dark: #cf4a62;
+      --report-ink: #1f2328;
+      --report-muted: #6c757d;
+      --report-surface-soft: #f7f8fb;
+      --report-line: #e7e9ef;
+      --report-summary: #fff4f6;
+      --report-summary-line: #f2bdc7;
+      --report-positive: #1a7f53;
+      --report-negative: #c0392b;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at top right, rgba(232, 93, 117, 0.08), transparent 28%),
+        linear-gradient(180deg, #fcfcfd 0%, #f5f7fb 100%);
+      color: var(--report-ink);
+    }
+
+    .report-page {
+      padding: 2rem 0 3rem;
+    }
+
+    .report-header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .report-kicker {
+      display: inline-block;
+      margin-bottom: 0.55rem;
+      color: var(--report-accent);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .report-title {
+      margin: 0;
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .report-subtitle {
+      margin: 0.45rem 0 0;
+      color: var(--report-muted);
+      font-size: 0.98rem;
+    }
+
+    .report-rule {
+      height: 1px;
+      margin: 1.35rem 0 1.65rem;
+      border: 0;
+      background: linear-gradient(90deg, rgba(31, 35, 40, 0.12), rgba(31, 35, 40, 0.03));
+    }
+
+    .report-filter-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.8rem;
+    }
+
+    .report-filter-card {
+      width: min(100%, 540px);
+      padding: 1rem 1.1rem;
+      border: 1px solid rgba(31, 35, 40, 0.06);
+      border-radius: 1.25rem;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 18px 38px rgba(17, 24, 39, 0.07);
+    }
+
+    .report-filter-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.9rem;
+      align-items: end;
+    }
+
+    .report-filter-card label {
+      color: var(--report-muted);
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .report-filter-card .form-select {
+      height: 3rem;
+      border-radius: 0.95rem;
+      border-color: #d7dce5;
+      font-weight: 600;
+    }
+
+    .report-filter-card .btn {
+      min-width: 88px;
+      height: 3rem;
+      border: 0;
+      border-radius: 0.95rem;
+      background: linear-gradient(135deg, var(--report-accent), #f2748a);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 12px 24px rgba(232, 93, 117, 0.24);
+    }
+
+    .report-filter-card .btn:hover {
+      background: linear-gradient(135deg, var(--report-accent-dark), var(--report-accent));
+      color: #fff;
+    }
+
+    .report-panel {
+      border: 1px solid rgba(31, 35, 40, 0.06);
+      border-radius: 1.45rem;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 18px 42px rgba(17, 24, 39, 0.08);
+      overflow: hidden;
+    }
+
+    .report-panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.35rem 1.5rem 1rem;
+    }
+
+    .report-panel-title {
+      margin: 0;
+      font-size: 1.12rem;
+      font-weight: 700;
+    }
+
+    .report-panel-caption {
+      margin: 0.25rem 0 0;
+      color: var(--report-muted);
+      font-size: 0.92rem;
+    }
+
+    .report-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.52rem 0.85rem;
+      border-radius: 999px;
+      background: var(--report-surface-soft);
+      color: #556070;
+      font-size: 0.83rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .report-status::before {
+      content: "";
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+      background: #98a2b3;
+    }
+
+    .report-status.is-loading::before {
+      background: #f59e0b;
+    }
+
+    .report-status.is-success::before {
+      background: var(--report-positive);
+    }
+
+    .report-status.is-error::before {
+      background: var(--report-negative);
+    }
+
+    .report-table {
+      margin: 0;
+      --bs-table-bg: transparent;
+    }
+
+    .report-table thead th {
+      padding: 1rem 1.15rem;
+      border-bottom-width: 1px;
+      border-color: var(--report-line);
+      background: linear-gradient(180deg, #fbfbfd 0%, #f4f6fa 100%);
+      color: #495164;
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .report-table tbody th,
+    .report-table tbody td {
+      padding: 0.95rem 1.15rem;
+      border-color: var(--report-line);
+      vertical-align: middle;
+    }
+
+    .report-table tbody th {
+      font-weight: 700;
+      color: #333c4d;
+    }
+
+    .report-table tbody td {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+    }
+
+    .report-table tbody tr:hover {
+      background-color: rgba(17, 24, 39, 0.02);
+    }
+
+    .report-table .summary-row {
+      background: var(--report-summary);
+    }
+
+    .report-table .summary-row th,
+    .report-table .summary-row td {
+      border-top: 2px solid var(--report-summary-line);
+      font-weight: 800;
+    }
+
+    .report-table .profit-negative {
+      color: var(--report-negative);
+    }
+
+    .report-table .profit-positive {
+      color: var(--report-positive);
+    }
+
+    .report-empty {
+      padding: 2.75rem 1rem !important;
+      color: var(--report-muted);
+      text-align: center !important;
+      font-weight: 600;
+    }
+
+    @media (max-width: 767.98px) {
+      .report-page {
+        padding-top: 1.4rem;
+      }
+
+      .report-header {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .report-filter-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .report-filter-card .btn {
+        width: 100%;
+      }
+
+      .report-panel-head {
+        align-items: start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#">손익 관리 프로그램</a>
+
+    <ul class="navbar-nav flex-row d-md-none">
+      <li class="nav-item text-nowrap">
+        <button class="nav-link px-3 text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu"
+          aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="bi bi-list fs-4"></i>
+        </button>
+      </li>
+    </ul>
+  </header>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
+        <div class="offcanvas-md offcanvas-end bg-body-tertiary" tabindex="-1" id="sidebarMenu"
+          aria-labelledby="sidebarMenuLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="sidebarMenuLabel">MENU</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu"
+              aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
+              <span>MENU</span>
+              <a class="link-secondary" href="#" aria-label="Add a new report">
+                <i class="bi bi-plus-circle"></i>
+              </a>
+            </h6>
+
+            <ul class="nav flex-column mb-auto">
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                  <i class="bi bi-house-fill"></i>
+                  택배 송장 변환
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" href="./category-management.html">
+                  <i class="bi bi-file-earmark-text"></i>
+                  카테고리 관리
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" href="./expense-management.html">
+                  <i class="bi bi-file-earmark"></i>
+                  비용 관리
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" href="./purchase-management.html">
+                  <i class="bi bi-box-seam"></i>
+                  매입 관리
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                  <i class="bi bi-cart"></i>
+                  매출 상세 조회
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2 active" href="./report-management.html" aria-current="page">
+                  <i class="bi bi-graph-up-arrow"></i>
+                  정산 리포트
+                </a>
+              </li>
+            </ul>
+
+            <hr class="my-3">
+
+            <ul class="nav flex-column mb-auto">
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                  <i class="bi bi-gear-wide-connected"></i>
+                  설정
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                  <i class="bi bi-door-closed"></i>
+                  로그아웃
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <section class="report-page">
+          <div class="report-header">
+            <div>
+              <span class="report-kicker">Settlement Report</span>
+              <h1 class="report-title">정산 리포트</h1>
+              <p class="report-subtitle">연도를 선택하면 월별 정산 금액과 총액을 한 번에 확인할 수 있습니다.</p>
+            </div>
+          </div>
+
+          <hr class="report-rule">
+
+          <div class="report-filter-wrap">
+            <form id="reportSearchForm" class="report-filter-card">
+              <div class="report-filter-grid">
+                <div>
+                  <label for="reportYear" class="form-label mb-2">조회 연도</label>
+                  <select id="reportYear" class="form-select" aria-label="조회 연도 선택"></select>
+                </div>
+                <button type="submit" class="btn">검색</button>
+              </div>
+            </form>
+          </div>
+
+          <section class="report-panel" aria-labelledby="reportPanelTitle">
+            <div class="report-panel-head">
+              <div>
+                <h2 id="reportPanelTitle" class="report-panel-title">월별 손익 현황</h2>
+                <p id="reportCaption" class="report-panel-caption">연도를 선택하고 검색해 주세요.</p>
+              </div>
+              <span id="reportStatus" class="report-status">조회 준비</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table report-table align-middle">
+                <thead>
+                  <tr>
+                    <th scope="col">해당월</th>
+                    <th scope="col" class="text-end">매출</th>
+                    <th scope="col" class="text-end">매입</th>
+                    <th scope="col" class="text-end">비용</th>
+                    <th scope="col" class="text-end">순이익</th>
+                  </tr>
+                </thead>
+                <tbody id="reportTableBody">
+                  <tr>
+                    <td colspan="5" class="report-empty">연도를 선택하고 검색 버튼을 눌러 주세요.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="../js/bootstrap.bundle.min.js"></script>
+  <script src="../js/report-management.js"></script>
+</body>
+</html>
