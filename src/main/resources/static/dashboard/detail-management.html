@@ -1,0 +1,932 @@
+<!doctype html>
+<html lang="ko" data-bs-theme="auto">
+<head>
+  <script src="../js/color-modes.js"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="정산 상세 조회 대시보드">
+  <title>정산 상세 조회</title>
+
+  <link href="../css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="../css/dashboard.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --report-accent: #e85d75;
+      --report-accent-dark: #cf4a62;
+      --report-ink: #1f2328;
+      --report-muted: #6c757d;
+      --report-surface-soft: #f7f8fb;
+      --report-line: #e7e9ef;
+      --report-summary: #fff4f6;
+      --report-summary-line: #f2bdc7;
+      --report-positive: #1a7f53;
+      --report-negative: #c0392b;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at top right, rgba(232, 93, 117, 0.08), transparent 28%),
+        linear-gradient(180deg, #fcfcfd 0%, #f5f7fb 100%);
+      color: var(--report-ink);
+    }
+
+    .detail-page {
+      padding: 2rem 0 3rem;
+    }
+
+    .detail-header {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.4rem;
+    }
+
+    .detail-kicker {
+      display: inline-block;
+      margin-bottom: 0.55rem;
+      color: var(--report-accent);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .detail-title {
+      margin: 0;
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .detail-subtitle {
+      margin: 0.45rem 0 0;
+      color: var(--report-muted);
+      font-size: 0.98rem;
+    }
+
+    .detail-rule {
+      height: 1px;
+      margin: 1.35rem 0 1.65rem;
+      border: 0;
+      background: linear-gradient(90deg, rgba(31, 35, 40, 0.12), rgba(31, 35, 40, 0.03));
+    }
+
+    .detail-filter-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.8rem;
+    }
+
+    .detail-filter-card {
+      width: min(100%, 100%);
+      padding: 1rem 1.1rem;
+      border: 1px solid rgba(31, 35, 40, 0.06);
+      border-radius: 1.25rem;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 18px 38px rgba(17, 24, 39, 0.07);
+    }
+
+    .detail-filter-grid {
+      display: grid;
+      grid-template-columns: 1.45fr 1fr 1fr 1fr auto;
+      gap: 0.9rem;
+      align-items: end;
+    }
+
+    .detail-filter-card label {
+      color: var(--report-muted);
+      font-size: 0.84rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .detail-date-range {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .detail-date-separator {
+      color: var(--report-muted);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .detail-filter-card .form-control,
+    .detail-filter-card .form-select {
+      height: 3rem;
+      border-radius: 0.95rem;
+      border-color: #d7dce5;
+      font-weight: 600;
+    }
+
+    .detail-filter-card .form-select:disabled {
+      background: #f5f7fb;
+      color: #98a2b3;
+    }
+
+    .detail-filter-card .btn {
+      min-width: 88px;
+      height: 3rem;
+      border: 0;
+      border-radius: 0.95rem;
+      background: linear-gradient(135deg, var(--report-accent), #f2748a);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 12px 24px rgba(232, 93, 117, 0.24);
+    }
+
+    .detail-filter-card .btn:hover {
+      background: linear-gradient(135deg, var(--report-accent-dark), var(--report-accent));
+      color: #fff;
+    }
+
+    .detail-panel {
+      border: 1px solid rgba(31, 35, 40, 0.06);
+      border-radius: 1.45rem;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 18px 42px rgba(17, 24, 39, 0.08);
+      overflow: hidden;
+    }
+
+    .detail-panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.35rem 1.5rem 1rem;
+    }
+
+    .detail-panel-title {
+      margin: 0;
+      font-size: 1.12rem;
+      font-weight: 700;
+    }
+
+    .detail-panel-caption {
+      margin: 0.25rem 0 0;
+      color: var(--report-muted);
+      font-size: 0.92rem;
+    }
+
+    .detail-panel-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .detail-count {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.52rem 0.85rem;
+      border-radius: 999px;
+      background: #fff4f6;
+      color: #cf4a62;
+      font-size: 0.83rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .detail-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.52rem 0.85rem;
+      border-radius: 999px;
+      background: var(--report-surface-soft);
+      color: #556070;
+      font-size: 0.83rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .detail-status::before {
+      content: "";
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+      background: #98a2b3;
+    }
+
+    .detail-status.is-loading::before {
+      background: #f59e0b;
+    }
+
+    .detail-status.is-success::before {
+      background: var(--report-positive);
+    }
+
+    .detail-status.is-error::before {
+      background: var(--report-negative);
+    }
+
+    .detail-table-wrap {
+      max-height: 460px;
+      overflow: auto;
+    }
+
+    .detail-table {
+      min-width: 900px;
+      margin: 0;
+      --bs-table-bg: transparent;
+    }
+
+    .detail-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      padding: 1rem 1.15rem;
+      border-bottom-width: 1px;
+      border-color: var(--report-line);
+      background: linear-gradient(180deg, #fbfbfd 0%, #f4f6fa 100%);
+      color: #495164;
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .detail-table tbody td {
+      padding: 0.95rem 1.15rem;
+      border-color: var(--report-line);
+      vertical-align: middle;
+      text-align: center;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .detail-table tbody td.amount-cell {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+    }
+
+    .detail-table tbody tr:hover {
+      background-color: rgba(17, 24, 39, 0.02);
+    }
+
+    .detail-empty {
+      padding: 2.75rem 1rem !important;
+      color: var(--report-muted);
+      text-align: center !important;
+      font-weight: 600;
+    }
+
+    .detail-summary {
+      padding: 1.25rem 1.5rem 1.5rem;
+      border-top: 1px solid var(--report-line);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 244, 246, 0.65));
+    }
+
+    .detail-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.9rem;
+    }
+
+    .detail-summary-card {
+      padding: 1rem 1.05rem;
+      border: 1px solid rgba(31, 35, 40, 0.06);
+      border-radius: 1rem;
+      background: rgba(255, 255, 255, 0.94);
+    }
+
+    .detail-summary-card.is-profit {
+      border-color: rgba(232, 93, 117, 0.24);
+      background: var(--report-summary);
+    }
+
+    .detail-summary-label {
+      color: var(--report-muted);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .detail-summary-value {
+      margin-top: 0.45rem;
+      font-size: 1.18rem;
+      font-weight: 800;
+      line-height: 1.2;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .detail-summary-card.is-profit .detail-summary-value {
+      color: #cf4a62;
+    }
+
+    .detail-summary-note {
+      margin: 0.9rem 0 0;
+      color: var(--report-muted);
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 991.98px) {
+      .detail-filter-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .detail-filter-grid > :first-child {
+        grid-column: 1 / -1;
+      }
+
+      .detail-filter-card .btn {
+        width: 100%;
+      }
+
+      .detail-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 767.98px) {
+      .detail-page {
+        padding-top: 1.4rem;
+      }
+
+      .detail-header {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .detail-filter-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-date-range {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-date-separator {
+        display: none;
+      }
+
+      .detail-panel-head {
+        align-items: start;
+        flex-direction: column;
+      }
+
+      .detail-panel-meta {
+        justify-content: flex-start;
+      }
+
+      .detail-table-wrap {
+        max-height: 400px;
+      }
+
+      .detail-summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#">손익 관리 프로그램</a>
+
+    <ul class="navbar-nav flex-row d-md-none">
+      <li class="nav-item text-nowrap">
+        <button class="nav-link px-3 text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu"
+          aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="bi bi-list fs-4"></i>
+        </button>
+      </li>
+    </ul>
+  </header>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
+        <div class="offcanvas-md offcanvas-end bg-body-tertiary" tabindex="-1" id="sidebarMenu"
+          aria-labelledby="sidebarMenuLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="sidebarMenuLabel">MENU</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu"
+              aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
+              <span>MENU</span>
+              <a class="link-secondary" href="#" aria-label="Add a new report">
+                <i class="bi bi-plus-circle"></i>
+              </a>
+            </h6>
+
+            <ul class="nav flex-column mb-auto">
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                  <i class="bi bi-house-fill"></i>
+                  택배 송장 변환
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" href="./category-management.html">
+                  <i class="bi bi-file-earmark-text"></i>
+                  카테고리 관리
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" href="./expense-management.html">
+                  <i class="bi bi-file-earmark"></i>
+                  비용 관리
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" href="./purchase-management.html">
+                  <i class="bi bi-box-seam"></i>
+                  매입 관리
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2 active" href="./detail-management.html" aria-current="page">
+                  <i class="bi bi-cart"></i>
+                  정산 상세 조회
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" href="./report-management.html">
+                  <i class="bi bi-graph-up-arrow"></i>
+                  정산 리포트
+                </a>
+              </li>
+            </ul>
+
+            <hr class="my-3">
+
+            <ul class="nav flex-column mb-auto">
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                  <i class="bi bi-gear-wide-connected"></i>
+                  설정
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link d-flex align-items-center gap-2" href="#">
+                  <i class="bi bi-door-closed"></i>
+                  로그아웃
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <section class="detail-page">
+          <div class="detail-header">
+            <div>
+              <span class="detail-kicker">Settlement Detail</span>
+              <h1 class="detail-title">정산 상세 조회</h1>
+              <p class="detail-subtitle">기간과 카테고리 조건으로 매출, 매입, 차감 택배비, 순익을 한 번에 확인합니다.</p>
+            </div>
+          </div>
+
+          <hr class="detail-rule">
+
+          <div class="detail-filter-wrap">
+            <form id="detailSearchForm" class="detail-filter-card">
+              <div class="detail-filter-grid">
+                <div>
+                  <label for="startDate" class="form-label mb-2">조회 기간</label>
+                  <div class="detail-date-range">
+                    <input type="date" id="startDate" class="form-control" aria-label="조회 시작일">
+                    <span class="detail-date-separator">~</span>
+                    <input type="date" id="endDate" class="form-control" aria-label="조회 종료일">
+                  </div>
+                </div>
+                <div>
+                  <label for="largeCategory" class="form-label mb-2">대분류</label>
+                  <select id="largeCategory" class="form-select" aria-label="대분류 선택">
+                    <option value="전체">전체</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="mediumCategory" class="form-label mb-2">중분류</label>
+                  <select id="mediumCategory" class="form-select" aria-label="중분류 선택" disabled>
+                    <option value="전체">전체</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="smallCategory" class="form-label mb-2">소분류</label>
+                  <select id="smallCategory" class="form-select" aria-label="소분류 선택" disabled>
+                    <option value="전체">전체</option>
+                  </select>
+                </div>
+                <button type="submit" class="btn">검색</button>
+              </div>
+            </form>
+          </div>
+
+          <section class="detail-panel" aria-labelledby="detailPanelTitle">
+            <div class="detail-panel-head">
+              <div>
+                <h2 id="detailPanelTitle" class="detail-panel-title">상세 조회 결과</h2>
+                <p id="detailCaption" class="detail-panel-caption">조건을 선택한 뒤 검색하면 상세 내역과 집계를 함께 보여줍니다.</p>
+              </div>
+              <div class="detail-panel-meta">
+                <span id="resultCount" class="detail-count">총 0건</span>
+                <span id="detailStatus" class="detail-status">조회 준비</span>
+              </div>
+            </div>
+
+            <div class="detail-table-wrap">
+              <table class="table detail-table align-middle">
+                <thead>
+                  <tr>
+                    <th scope="col">날짜</th>
+                    <th scope="col">대분류</th>
+                    <th scope="col">중분류</th>
+                    <th scope="col">소분류</th>
+                    <th scope="col">구분</th>
+                    <th scope="col" class="text-end">금액</th>
+                  </tr>
+                </thead>
+                <tbody id="detailTableBody">
+                  <tr>
+                    <td colspan="6" class="detail-empty">조회 조건을 선택한 뒤 검색해 주세요.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="detail-summary">
+              <div class="detail-summary-grid">
+                <div class="detail-summary-card">
+                  <div class="detail-summary-label">차감 택배비</div>
+                  <div id="summaryDeliveryFee" class="detail-summary-value">0원</div>
+                </div>
+                <div class="detail-summary-card">
+                  <div class="detail-summary-label">총 매출</div>
+                  <div id="summarySales" class="detail-summary-value">0원</div>
+                </div>
+                <div class="detail-summary-card">
+                  <div class="detail-summary-label">총 매입</div>
+                  <div id="summaryPurchase" class="detail-summary-value">0원</div>
+                </div>
+                <div class="detail-summary-card is-profit">
+                  <div class="detail-summary-label">순익</div>
+                  <div id="summaryProfit" class="detail-summary-value">0원</div>
+                </div>
+              </div>
+              <p id="detailSummaryNote" class="detail-summary-note">하단 집계는 스크롤 여부와 관계없이 항상 동일한 위치에서 확인할 수 있습니다.</p>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="../js/bootstrap.bundle.min.js"></script>
+  <script>
+    (() => {
+      const DEFAULT_ALL = "전체";
+      const LOCAL_DEV_ORIGIN = "http://localhost:8080";
+
+      function resolveApiBase() {
+        if (window.location.protocol === "file:") {
+          return `${LOCAL_DEV_ORIGIN}/renewal/settlementDetail`;
+        }
+        return `${window.location.origin}/renewal/settlementDetail`;
+      }
+
+      const API_BASE = resolveApiBase();
+      const API = {
+        large: `${API_BASE}/options/large`,
+        medium: `${API_BASE}/options/medium`,
+        small: `${API_BASE}/options/small`,
+        search: `${API_BASE}/search`
+      };
+
+      const el = {
+        form: document.getElementById("detailSearchForm"),
+        startDate: document.getElementById("startDate"),
+        endDate: document.getElementById("endDate"),
+        largeCategory: document.getElementById("largeCategory"),
+        mediumCategory: document.getElementById("mediumCategory"),
+        smallCategory: document.getElementById("smallCategory"),
+        tableBody: document.getElementById("detailTableBody"),
+        resultCount: document.getElementById("resultCount"),
+        detailStatus: document.getElementById("detailStatus"),
+        detailCaption: document.getElementById("detailCaption"),
+        summaryDeliveryFee: document.getElementById("summaryDeliveryFee"),
+        summarySales: document.getElementById("summarySales"),
+        summaryPurchase: document.getElementById("summaryPurchase"),
+        summaryProfit: document.getElementById("summaryProfit"),
+        summaryNote: document.getElementById("detailSummaryNote")
+      };
+
+      function normalize(value) {
+        if (value == null) return "";
+        const trimmed = String(value).trim();
+        return trimmed === "" || trimmed.toUpperCase() === "ALL" || trimmed === DEFAULT_ALL ? "" : trimmed;
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      function formatAmount(value) {
+        return `${Number(value || 0).toLocaleString("ko-KR")}원`;
+      }
+
+      function buildQuery(params) {
+        const searchParams = new URLSearchParams();
+        Object.entries(params).forEach(([key, value]) => {
+          if (value !== undefined && value !== null && String(value).trim() !== "") {
+            searchParams.set(key, value);
+          }
+        });
+        return searchParams.toString();
+      }
+
+      function describeApiError(error, fallbackMessage) {
+        if (!error || !error.message) {
+          return fallbackMessage;
+        }
+
+        if (error.message === "NETWORK_ERROR") {
+          if (window.location.protocol === "file:") {
+            return "HTML 파일을 직접 열었다면 로컬 서버(8080)를 먼저 실행해 주세요.";
+          }
+          return "서버에 연결하지 못했습니다. 애플리케이션 실행 상태를 확인해 주세요.";
+        }
+
+        if (error.message === "NON_JSON_RESPONSE") {
+          return "API가 JSON 대신 HTML을 반환했습니다. 로그인 페이지 또는 오류 페이지일 수 있습니다.";
+        }
+
+        if (error.message === "HTTP_401" || error.message === "HTTP_403") {
+          return "조회 권한이 없거나 로그인 상태가 아닙니다.";
+        }
+
+        if (error.message === "HTTP_404") {
+          return "API 경로를 찾지 못했습니다. 컨트롤러 매핑 경로를 확인해 주세요.";
+        }
+
+        if (error.message === "HTTP_500") {
+          return "서버 내부 오류가 발생했습니다. 백엔드 로그를 확인해 주세요.";
+        }
+
+        return fallbackMessage;
+      }
+
+      async function requestJson(url) {
+        try {
+          const response = await fetch(url, {
+            method: "GET",
+            credentials: "same-origin",
+            headers: {
+              "Accept": "application/json"
+            }
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP_${response.status}`);
+          }
+
+          const contentType = response.headers.get("content-type") || "";
+          if (!contentType.toLowerCase().includes("application/json")) {
+            throw new Error("NON_JSON_RESPONSE");
+          }
+
+          return await response.json();
+        } catch (error) {
+          if (error instanceof TypeError) {
+            throw new Error("NETWORK_ERROR");
+          }
+          throw error;
+        }
+      }
+
+      function setStatus(text, state) {
+        el.detailStatus.textContent = text;
+        el.detailStatus.className = "detail-status";
+
+        if (state) {
+          el.detailStatus.classList.add(`is-${state}`);
+        }
+      }
+
+      function resetSummary() {
+        el.summaryDeliveryFee.textContent = "0원";
+        el.summarySales.textContent = "0원";
+        el.summaryPurchase.textContent = "0원";
+        el.summaryProfit.textContent = "0원";
+      }
+
+      function renderEmpty(message) {
+        el.tableBody.innerHTML = `
+          <tr>
+            <td colspan="6" class="detail-empty">${escapeHtml(message)}</td>
+          </tr>
+        `;
+      }
+
+      function setResultCount(count) {
+        el.resultCount.textContent = `총 ${Number(count || 0).toLocaleString("ko-KR")}건`;
+      }
+
+      function fillSelectOptions(selectEl, items, disabled) {
+        const options = [`<option value="${DEFAULT_ALL}">${DEFAULT_ALL}</option>`];
+
+        items.forEach((item) => {
+          const value = normalize(item?.value);
+          if (!value) return;
+          options.push(`<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`);
+        });
+
+        selectEl.innerHTML = options.join("");
+        selectEl.disabled = Boolean(disabled);
+        selectEl.value = DEFAULT_ALL;
+      }
+
+      function initDefaultDates() {
+        if (el.startDate.value || el.endDate.value) {
+          return;
+        }
+
+        const today = new Date();
+        const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+        const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+        el.startDate.value = firstDay.toISOString().slice(0, 10);
+        el.endDate.value = lastDay.toISOString().slice(0, 10);
+      }
+
+      async function loadLargeOptions() {
+        const items = await requestJson(API.large);
+        fillSelectOptions(el.largeCategory, Array.isArray(items) ? items : [], false);
+      }
+
+      async function loadMediumOptions() {
+        fillSelectOptions(el.mediumCategory, [], true);
+        fillSelectOptions(el.smallCategory, [], true);
+
+        const largeCategory = normalize(el.largeCategory.value);
+        if (!largeCategory) {
+          return;
+        }
+
+        const query = buildQuery({ largeCategory });
+        const items = await requestJson(`${API.medium}?${query}`);
+        fillSelectOptions(el.mediumCategory, Array.isArray(items) ? items : [], false);
+      }
+
+      async function loadSmallOptions() {
+        fillSelectOptions(el.smallCategory, [], true);
+
+        const largeCategory = normalize(el.largeCategory.value);
+        const mediumCategory = normalize(el.mediumCategory.value);
+        if (!largeCategory || !mediumCategory) {
+          return;
+        }
+
+        const query = buildQuery({ largeCategory, mediumCategory });
+        const items = await requestJson(`${API.small}?${query}`);
+        fillSelectOptions(el.smallCategory, Array.isArray(items) ? items : [], false);
+      }
+
+      function renderRows(items) {
+        if (!Array.isArray(items) || items.length === 0) {
+          renderEmpty("조회 결과가 없습니다.");
+          setResultCount(0);
+          return;
+        }
+
+        el.tableBody.innerHTML = items.map((row) => {
+          const dt = row.dt ?? row.date ?? "-";
+          const gb = row.gb ?? row.type ?? "-";
+          const largeCategory = row.largeCategory ?? row.large_category ?? "-";
+          const mediumCategory = row.mediumCategory ?? row.medium_category ?? "-";
+          const smallCategory = row.smallCategory ?? row.small_category ?? "-";
+          const amount = row.amount ?? 0;
+
+          return `
+            <tr>
+              <td>${escapeHtml(dt)}</td>
+              <td>${escapeHtml(largeCategory)}</td>
+              <td>${escapeHtml(mediumCategory)}</td>
+              <td>${escapeHtml(smallCategory)}</td>
+              <td>${escapeHtml(gb)}</td>
+              <td class="amount-cell">${formatAmount(amount)}</td>
+            </tr>
+          `;
+        }).join("");
+
+        setResultCount(items.length);
+      }
+
+      function renderSummary(data) {
+        const deductedDeliveryFee = data?.deductedDeliveryFee ?? data?.deducted_delivery_fee ?? 0;
+        const salesTotal = data?.salesTotal ?? data?.sales_total ?? 0;
+        const purchaseTotal = data?.purchaseTotal ?? data?.purchase_total ?? 0;
+        const profit = data?.profit ?? 0;
+
+        el.summaryDeliveryFee.textContent = formatAmount(deductedDeliveryFee);
+        el.summarySales.textContent = formatAmount(salesTotal);
+        el.summaryPurchase.textContent = formatAmount(purchaseTotal);
+        el.summaryProfit.textContent = formatAmount(profit);
+      }
+
+      async function searchDetail() {
+        const query = buildQuery({
+          startDate: normalize(el.startDate.value),
+          endDate: normalize(el.endDate.value),
+          largeCategory: normalize(el.largeCategory.value) || DEFAULT_ALL,
+          mediumCategory: normalize(el.mediumCategory.value) || DEFAULT_ALL,
+          smallCategory: normalize(el.smallCategory.value) || DEFAULT_ALL
+        });
+
+        setStatus("조회 중", "loading");
+        el.detailCaption.textContent = "검색 조건에 맞는 정산 상세 내역을 불러오는 중입니다.";
+
+        try {
+          const data = await requestJson(`${API.search}?${query}`);
+          renderRows(data?.items ?? []);
+          renderSummary(data ?? {});
+          el.summaryNote.textContent = "하단 집계는 스크롤 여부와 관계없이 항상 동일한 위치에서 확인할 수 있습니다.";
+          el.detailCaption.textContent = "상세 내역과 집계가 함께 반영되었습니다.";
+          setStatus("조회 완료", "success");
+        } catch (error) {
+          console.error("[settlement-detail] search failed", error);
+          renderEmpty("상세 조회 결과를 불러오지 못했습니다.");
+          resetSummary();
+          setResultCount(0);
+          el.summaryNote.textContent = describeApiError(error, "조회 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.");
+          el.detailCaption.textContent = "연결 상태를 확인한 뒤 다시 검색해 주세요.";
+          setStatus("조회 실패", "error");
+        }
+      }
+
+      el.largeCategory.addEventListener("change", async () => {
+        try {
+          setStatus("옵션 로딩", "loading");
+          await loadMediumOptions();
+          setStatus("조회 준비", "");
+        } catch (error) {
+          console.error("[settlement-detail] medium options failed", error);
+          fillSelectOptions(el.mediumCategory, [], true);
+          fillSelectOptions(el.smallCategory, [], true);
+          el.summaryNote.textContent = describeApiError(error, "중분류 옵션을 불러오지 못했습니다.");
+          setStatus("옵션 실패", "error");
+        }
+      });
+
+      el.mediumCategory.addEventListener("change", async () => {
+        try {
+          setStatus("옵션 로딩", "loading");
+          await loadSmallOptions();
+          setStatus("조회 준비", "");
+        } catch (error) {
+          console.error("[settlement-detail] small options failed", error);
+          fillSelectOptions(el.smallCategory, [], true);
+          el.summaryNote.textContent = describeApiError(error, "소분류 옵션을 불러오지 못했습니다.");
+          setStatus("옵션 실패", "error");
+        }
+      });
+
+      el.form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        await searchDetail();
+      });
+
+      (async function init() {
+        initDefaultDates();
+        renderEmpty("조회 조건을 선택한 뒤 검색해 주세요.");
+        resetSummary();
+        setStatus("옵션 로딩", "loading");
+
+        if (window.location.protocol === "file:") {
+          el.summaryNote.textContent = "파일로 직접 열면 API는 localhost:8080 기준으로 호출됩니다.";
+        }
+
+        try {
+          await loadLargeOptions();
+          el.detailCaption.textContent = "조건을 선택한 뒤 검색하면 상세 내역과 집계를 함께 보여줍니다.";
+          setStatus("조회 준비", "");
+        } catch (error) {
+          console.error("[settlement-detail] large options failed", error);
+          fillSelectOptions(el.largeCategory, [], false);
+          el.summaryNote.textContent = describeApiError(error, "카테고리 옵션을 불러오지 못했습니다.");
+          el.detailCaption.textContent = "옵션 API 연결 상태를 먼저 확인해 주세요.";
+          setStatus("옵션 실패", "error");
+        }
+      })();
+    })();
+  </script>
+</body>
+</html>

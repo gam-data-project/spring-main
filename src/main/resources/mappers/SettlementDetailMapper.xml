@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.example.repository.SettlementDetailMapper">
+
+    <select id="selectDistinctLargeCategories"
+            resultType="org.example.dto.settlementDetail.response.SettlementDetailOptionDto">
+        SELECT DISTINCT large_category AS value
+        FROM new_category
+        ORDER BY large_category
+    </select>
+
+    <select id="selectDistinctMediumCategoriesByLarge"
+            resultType="org.example.dto.settlementDetail.response.SettlementDetailOptionDto">
+        SELECT DISTINCT medium_category AS value
+        FROM new_category
+        WHERE large_category = #{largeCategory}
+        ORDER BY medium_category
+    </select>
+
+    <select id="selectDistinctSmallCategoriesByLargeMedium"
+            resultType="org.example.dto.settlementDetail.response.SettlementDetailOptionDto">
+        SELECT DISTINCT small_category AS value
+        FROM new_category
+        WHERE large_category = #{largeCategory}
+        AND medium_category = #{mediumCategory}
+        ORDER BY small_category
+    </select>
+
+    <select id="selectSettlementDetailRows"
+            resultType="org.example.dto.settlementDetail.response.SettlementDetailRowDto">
+        WITH
+        sales_filtered AS (
+        SELECT
+        s.order_date,
+        s.order_number,
+        s.platform,
+        s.shipping_included,
+        c.large_category,
+        c.medium_category,
+        c.small_category,
+        s.product_total
+        FROM new_sales_work_20260510 s
+        LEFT JOIN new_product_work_20260510 p ON p.id = s.product_id
+        LEFT JOIN new_category c ON c.id = p.category_id
+        WHERE 1 = 1
+        <if test="req.startDate != null">
+            AND s.order_date <![CDATA[>=]]> #{req.startDate}
+        </if>
+        <if test="req.endDate != null">
+            AND s.order_date <![CDATA[<=]]> #{req.endDate}
+        </if>
+        <if test="req.largeCategory != null and req.largeCategory != '' and req.largeCategory != 'ALL' and req.largeCategory != '전체'">
+            AND c.large_category = #{req.largeCategory}
+        </if>
+        <if test="req.mediumCategory != null and req.mediumCategory != '' and req.mediumCategory != 'ALL' and req.mediumCategory != '전체'">
+            AND c.medium_category = #{req.mediumCategory}
+        </if>
+        <if test="req.smallCategory != null and req.smallCategory != '' and req.smallCategory != 'ALL' and req.smallCategory != '전체'">
+            AND c.small_category = #{req.smallCategory}
+        </if>
+        ),
+
+        purchase_filtered AS (
+        SELECT
+        pi.purchase_date,
+        c.large_category,
+        c.medium_category,
+        c.small_category,
+        pi.total_cost
+        FROM new_purchase_info pi
+        LEFT JOIN new_product_work_20260510 p ON p.id = pi.product_id
+        LEFT JOIN new_category c ON c.id = p.category_id
+        WHERE 1 = 1
+        <if test="req.startDate != null">
+            AND pi.purchase_date <![CDATA[>=]]> #{req.startDate}
+        </if>
+        <if test="req.endDate != null">
+            AND pi.purchase_date <![CDATA[<=]]> #{req.endDate}
+        </if>
+        <if test="req.largeCategory != null and req.largeCategory != '' and req.largeCategory != 'ALL' and req.largeCategory != '전체'">
+            AND c.large_category = #{req.largeCategory}
+        </if>
+        <if test="req.mediumCategory != null and req.mediumCategory != '' and req.mediumCategory != 'ALL' and req.mediumCategory != '전체'">
+            AND c.medium_category = #{req.mediumCategory}
+        </if>
+        <if test="req.smallCategory != null and req.smallCategory != '' and req.smallCategory != 'ALL' and req.smallCategory != '전체'">
+            AND c.small_category = #{req.smallCategory}
+        </if>
+        ),
+
+        detail_rows AS (
+        SELECT
+        sf.order_date AS dt,
+        '매출' AS gb,
+        sf.large_category,
+        sf.medium_category,
+        sf.small_category,
+        SUM(sf.product_total) AS amount
+        FROM sales_filtered sf
+        GROUP BY sf.order_date, sf.large_category, sf.medium_category, sf.small_category
+
+        UNION ALL
+
+        SELECT
+        pf.purchase_date AS dt,
+        '매입' AS gb,
+        pf.large_category,
+        pf.medium_category,
+        pf.small_category,
+        SUM(pf.total_cost) AS amount
+        FROM purchase_filtered pf
+        GROUP BY pf.purchase_date, pf.large_category, pf.medium_category, pf.small_category
+        ),
+
+        type_totals AS (
+        SELECT gb, SUM(amount) AS total_amount
+        FROM detail_rows
+        GROUP BY gb WITH ROLLUP
+        HAVING gb IS NOT NULL
+        ),
+
+        target_orders AS (
+        SELECT DISTINCT order_number, platform
+        FROM sales_filtered
+        WHERE shipping_included = 0
+        AND order_number IS NOT NULL
+        ),
+
+        delivery_per_order AS (
+        SELECT
+        d.order_number,
+        d.platform,
+        SUM(d.total_delivery_fee) AS total_delivery_fee
+        FROM new_delivery_fee d
+        WHERE d.shipping_included = 0
+        GROUP BY d.order_number, d.platform
+        ),
+
+        deduct_fee AS (
+        SELECT COALESCE(SUM(dp.total_delivery_fee), 0) AS deducted_delivery_fee
+        FROM delivery_per_order dp
+        JOIN target_orders t
+        ON t.order_number = dp.order_number
+        AND t.platform = dp.platform
+        ),
+
+        summary_rows AS (
+        SELECT
+        NULL AS dt, '차감 택배비' AS gb,
+        NULL AS large_category, NULL AS medium_category, NULL AS small_category,
+        (SELECT deducted_delivery_fee FROM deduct_fee) AS amount,
+        1 AS summary_ord
+        UNION ALL
+        SELECT
+        NULL, '매출합계', NULL, NULL, NULL,
+        COALESCE((SELECT total_amount FROM type_totals WHERE gb = '매출'), 0),
+        2
+        UNION ALL
+        SELECT
+        NULL, '매입합계', NULL, NULL, NULL,
+        COALESCE((SELECT total_amount FROM type_totals WHERE gb = '매입'), 0),
+        3
+        )
+
+        SELECT dt, gb, large_category, medium_category, small_category, amount
+        FROM (
+        SELECT
+        d.dt, d.gb, d.large_category, d.medium_category, d.small_category, d.amount,
+        0 AS grp,
+        d.dt AS ord_date,
+        FIELD(d.gb, '매출', '매입') AS ord_gb,
+        0 AS ord_summary
+        FROM detail_rows d
+
+        UNION ALL
+
+        SELECT
+        s.dt, s.gb, s.large_category, s.medium_category, s.small_category, s.amount,
+        1 AS grp,
+        NULL AS ord_date,
+        0 AS ord_gb,
+        s.summary_ord AS ord_summary
+        FROM summary_rows s
+        ) x
+        ORDER BY
+        x.grp,
+        x.ord_date,
+        x.ord_gb,
+        x.large_category,
+        x.medium_category,
+        x.small_category,
+        x.ord_summary
+    </select>
+
+</mapper>

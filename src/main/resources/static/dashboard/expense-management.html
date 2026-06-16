@@ -94,6 +94,310 @@
       .bd-mode-toggle .dropdown-menu .active .bi {
         display: block !important;
       }
+
+      :root {
+        --manage-accent: #e85d75;
+        --manage-accent-dark: #cf4a62;
+        --manage-ink: #1f2328;
+        --manage-muted: #6c757d;
+        --manage-surface-soft: #f7f8fb;
+        --manage-line: #e7e9ef;
+      }
+
+      body {
+        background:
+          radial-gradient(circle at top right, rgba(232, 93, 117, 0.08), transparent 28%),
+          linear-gradient(180deg, #fcfcfd 0%, #f5f7fb 100%);
+        color: var(--manage-ink);
+      }
+
+      .manage-page {
+        padding: 2rem 0 3rem;
+      }
+
+      .manage-header {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1.4rem;
+      }
+
+      .manage-kicker {
+        display: inline-block;
+        margin-bottom: 0.55rem;
+        color: var(--manage-accent);
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .manage-title {
+        margin: 0;
+        font-size: clamp(1.9rem, 3vw, 2.5rem);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+
+      .manage-subtitle {
+        margin: 0.45rem 0 0;
+        color: var(--manage-muted);
+        font-size: 0.98rem;
+      }
+
+      .manage-rule {
+        height: 1px;
+        margin: 1.35rem 0 1.8rem;
+        border: 0;
+        background: linear-gradient(90deg, rgba(31, 35, 40, 0.12), rgba(31, 35, 40, 0.03));
+      }
+
+      .manage-layout {
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      .manage-card {
+        border: 1px solid rgba(31, 35, 40, 0.06);
+        border-radius: 1.45rem;
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 18px 42px rgba(17, 24, 39, 0.08);
+        padding: 1.45rem 1.5rem 1.55rem;
+      }
+
+      .manage-card--table {
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .manage-card-header {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1.15rem;
+      }
+
+      .manage-card--table .manage-card-header {
+        padding: 1.35rem 1.5rem 1rem;
+        margin-bottom: 0;
+      }
+
+      .manage-card-title {
+        margin: 0;
+        font-size: 1.12rem;
+        font-weight: 700;
+      }
+
+      .manage-card-caption {
+        margin: 0.3rem 0 0;
+        color: var(--manage-muted);
+        font-size: 0.92rem;
+      }
+
+      .manage-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.52rem 0.85rem;
+        border-radius: 999px;
+        background: var(--manage-surface-soft);
+        color: #556070;
+        font-size: 0.83rem;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .manage-card .form-label {
+        color: #616a7d;
+        font-size: 0.84rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      .manage-card .form-select,
+      .manage-card .form-control {
+        min-height: 3rem;
+        border-radius: 0.95rem;
+        border-color: #d7dce5;
+        padding-left: 0.95rem;
+        padding-right: 0.95rem;
+        font-weight: 600;
+        box-shadow: none;
+      }
+
+      .manage-card .form-select:focus,
+      .manage-card .form-control:focus {
+        border-color: rgba(232, 93, 117, 0.55);
+        box-shadow: 0 0 0 0.25rem rgba(232, 93, 117, 0.12);
+      }
+
+      .manage-card .input-group > .form-control {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      .manage-card .input-group > .btn {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+
+      .manage-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+      }
+
+      .manage-btn {
+        min-width: 108px;
+        height: 2.9rem;
+        padding: 0 1.2rem;
+        border: 1px solid transparent;
+        border-radius: 0.95rem;
+        font-weight: 700;
+        font-size: 0.95rem;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+      }
+
+      .manage-btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .manage-btn-primary {
+        background: linear-gradient(135deg, var(--manage-accent), #f2748a);
+        color: #fff;
+        box-shadow: 0 14px 30px rgba(232, 93, 117, 0.24);
+      }
+
+      .manage-btn-primary:hover {
+        background: linear-gradient(135deg, var(--manage-accent-dark), var(--manage-accent));
+        color: #fff;
+      }
+
+      .manage-btn-soft {
+        background: #fff6f7;
+        border-color: #f4c7cf;
+        color: #cf4a62;
+      }
+
+      .manage-btn-soft:hover {
+        background: #fff0f3;
+        color: #b63d54;
+      }
+
+      .manage-btn-neutral {
+        background: #f4f6fb;
+        border-color: #dde3ee;
+        color: #566173;
+      }
+
+      .manage-btn-neutral:hover {
+        background: #edf1f7;
+        color: #404858;
+      }
+
+      .manage-btn-danger {
+        background: #fff3f4;
+        border-color: #f2c5cb;
+        color: #c24a59;
+      }
+
+      .manage-btn-danger:hover {
+        background: #ffebee;
+        color: #a93849;
+      }
+
+      .manage-table-wrap {
+        overflow: auto;
+      }
+
+      .manage-table {
+        margin: 0;
+        --bs-table-bg: transparent;
+      }
+
+      .manage-table thead th {
+        padding: 1rem 1.15rem;
+        border-bottom-width: 1px;
+        border-color: var(--manage-line);
+        background: linear-gradient(180deg, #fbfbfd 0%, #f4f6fa 100%);
+        color: #495164;
+        font-size: 0.84rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .manage-table tbody td,
+      .manage-table tbody th {
+        padding: 0.95rem 1.15rem;
+        border-color: var(--manage-line);
+        vertical-align: middle;
+      }
+
+      .manage-table tbody tr:hover {
+        background-color: rgba(17, 24, 39, 0.02);
+      }
+
+      .manage-table-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem 1.5rem 1.2rem;
+        border-top: 1px solid rgba(31, 35, 40, 0.06);
+      }
+
+      .manage-table-footer small {
+        color: var(--manage-muted);
+        font-weight: 600;
+      }
+
+      .manage-card .pagination {
+        --bs-pagination-padding-x: 0.78rem;
+        --bs-pagination-padding-y: 0.42rem;
+        --bs-pagination-color: #596579;
+        --bs-pagination-border-color: #dde3ee;
+        --bs-pagination-hover-color: var(--manage-accent-dark);
+        --bs-pagination-hover-bg: #fff5f7;
+        --bs-pagination-hover-border-color: #f3c7ce;
+        --bs-pagination-focus-color: var(--manage-accent-dark);
+        --bs-pagination-focus-bg: #fff5f7;
+        --bs-pagination-focus-box-shadow: 0 0 0 0.2rem rgba(232, 93, 117, 0.14);
+        --bs-pagination-active-bg: var(--manage-accent);
+        --bs-pagination-active-border-color: var(--manage-accent);
+      }
+
+      @media (max-width: 767.98px) {
+        .manage-page {
+          padding-top: 1.4rem;
+        }
+
+        .manage-card {
+          padding: 1.2rem 1rem 1.25rem;
+        }
+
+        .manage-card--table {
+          padding: 0;
+        }
+
+        .manage-card--table .manage-card-header,
+        .manage-table-footer {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+
+        .manage-table-footer {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .manage-btn {
+          width: 100%;
+        }
+      }
     </style>
 
     
@@ -269,9 +573,9 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link d-flex align-items-center gap-2" href="#">
+              <a class="nav-link d-flex align-items-center gap-2" href="./detail-management.html">
                 <svg class="bi"><use xlink:href="#cart"/></svg>
-                매출 상세 조회
+                정산 상세 조회
               </a>
             </li>
             <li class="nav-item">
@@ -302,214 +606,252 @@
       </div>
     </div>
 
-    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">비용 관리</h1>
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 manage-page">
+      <div class="manage-header">
+        <div>
+          <span class="manage-kicker">Expense Workspace</span>
+          <h1 class="manage-title">비용 관리</h1>
+          <p class="manage-subtitle">조회, 등록, 수정, 엑셀 확인까지 한 흐름으로 이어지도록 본문 구성을 다시 다듬었습니다.</p>
+        </div>
       </div>
 
-      <div class="col-md-12 col-lg-12">
-        <h4 class="mb-3">비용 조회</h4>
-        <form id="purchaseSearchForm">
-          <div class="row g-3">
-            <div class="col-md-2">
-              <label for="searchLargeCategory" class="form-label">대분류</label>
-              <select class="form-select" id="searchLargeCategory">
-                <option value="비용">비용</option>
-              </select>
+      <hr class="manage-rule">
+
+      <div class="manage-layout">
+        <section class="manage-card">
+          <div class="manage-card-header">
+            <div>
+              <h2 class="manage-card-title">비용 조회</h2>
+              <p class="manage-card-caption">비용 분류와 유형, 기간 조건을 조합해 필요한 내역만 빠르게 추려볼 수 있습니다.</p>
             </div>
-            <div class="col-md-2">
-              <label for="searchMediumCategory" class="form-label">중분류</label>
-              <select class="form-select" id="searchMediumCategory">
-                <option value="전체">전체</option>
-              </select>
-            </div>
-            <div class="col-md-2">
-              <label for="searchSmallCategory" class="form-label">소분류</label>
-              <select class="form-select" id="searchSmallCategory">
-                <option value="전체">전체</option>
-              </select>
-            </div>
-            <div class="col-md-2">
-              <label for="searchPurchaseType" class="form-label">유형</label>
-              <select class="form-select" id="searchPurchaseType">
-                <option value="전체">전체</option>
-              </select>
-            </div>
-            <div class="col-md-4">
-              <label class="form-label">날짜</label>
-              <div class="d-flex align-items-center gap-2">
-                <input type="date" class="form-control" id="searchStartDate">
-                <span class="text-body-secondary">~</span>
-                <input type="date" class="form-control" id="searchEndDate">
+          </div>
+
+          <form id="purchaseSearchForm">
+            <div class="row g-3">
+              <div class="col-md-2">
+                <label for="searchLargeCategory" class="form-label">대분류</label>
+                <select class="form-select" id="searchLargeCategory">
+                  <option value="비용">비용</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="searchMediumCategory" class="form-label">중분류</label>
+                <select class="form-select" id="searchMediumCategory">
+                  <option value="전체">전체</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="searchSmallCategory" class="form-label">소분류</label>
+                <select class="form-select" id="searchSmallCategory">
+                  <option value="전체">전체</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="searchPurchaseType" class="form-label">유형</label>
+                <select class="form-select" id="searchPurchaseType">
+                  <option value="전체">전체</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">날짜</label>
+                <div class="d-flex align-items-center gap-2">
+                  <input type="date" class="form-control" id="searchStartDate">
+                  <span class="text-body-secondary">~</span>
+                  <input type="date" class="form-control" id="searchEndDate">
+                </div>
               </div>
             </div>
+
+            <div class="manage-actions">
+              <button type="button" class="btn manage-btn manage-btn-primary" id="btnSearch">조회</button>
+              <button type="button" class="btn manage-btn manage-btn-soft" id="btnSearchAll">전체 조회</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="manage-card manage-card--table">
+          <div class="manage-card-header">
+            <div>
+              <h2 class="manage-card-title">비용 목록</h2>
+              <p class="manage-card-caption">조건에 맞는 비용 데이터를 한눈에 비교할 수 있도록 표 형태로 정리했습니다.</p>
+            </div>
+            <span id="expensePageInfo" class="manage-badge">총 0건</span>
           </div>
 
-          <div class="mt-3">
-            <button type="button" class="btn btn-secondary btn-sm me-1" id="btnSearch">조회</button>
-            <button type="button" class="btn btn-secondary btn-sm" id="btnSearchAll">전체 조회</button>
+          <div class="manage-table-wrap">
+            <table class="table manage-table align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>대분류</th>
+                  <th>중분류</th>
+                  <th>소분류</th>
+                  <th>유형</th>
+                  <th>비용 발생처</th>
+                  <th class="text-end">단가</th>
+                  <th class="text-end">수량</th>
+                  <th class="text-end">총금액</th>
+                </tr>
+              </thead>
+              <tbody id="purchaseTableBody">
+                <tr>
+                  <td>대분류 예시</td>
+                  <td>중분류 예시</td>
+                  <td>소분류 예시</td>
+                  <td>원재료</td>
+                  <td>거래처A</td>
+                  <td class="text-end">10,000</td>
+                  <td class="text-end">3</td>
+                  <td class="text-end">30,000</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-        </form>
 
-        <!-- <hr class="my-4"> -->
+          <div class="manage-table-footer">
+            <small>페이지 이동</small>
+            <nav aria-label="비용 목록 페이지 이동">
+              <ul id="expensePagination" class="pagination pagination-sm mb-0"></ul>
+            </nav>
+          </div>
+        </section>
 
-        <!-- <h4 class="mb-3">매입 목록</h4> -->
-        <div class="table-responsive small">
-          <table class="table table-striped table-sm">
-            <thead>
-              <tr>
-                <th>대분류</th>
-                <th>중분류</th>
-                <th>소분류</th>
-                <th>유형</th>
-                <th>비용 발생처</th>
-                <th class="text-end">단가</th>
-                <th class="text-end">수량</th>
-                <th class="text-end">총금액</th>
-              </tr>
-            </thead>
-            <tbody id="purchaseTableBody">
-              <tr>
-                <td>대분류 예시</td>
-                <td>중분류 예시</td>
-                <td>소분류 예시</td>
-                <td>원재료</td>
-                <td>거래처A</td>
-                <td class="text-end">10,000</td>
-                <td class="text-end">3</td>
-                <td class="text-end">30,000</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="d-flex justify-content-between align-items-center mt-2">
-          <small id="expensePageInfo" class="text-muted">총 0건</small>
-          <nav aria-label="비용 목록 페이지 이동">
-            <ul id="expensePagination" class="pagination pagination-sm mb-0"></ul>
-          </nav>
-        </div>
-
-        <hr class="my-4">
-
-        <h4 class="mb-3">비용 저장 및 수정</h4>
-        <form id="purchaseForm">
-          <input type="hidden" id="purchaseId">
-
-          <div class="row g-3">
-            <div class="col-md-2">
-              <label for="saveLargeCategory" class="form-label">대분류</label>
-              <select class="form-select" id="saveLargeCategory" required>
-                <option value="">선택</option>
-              </select>
-            </div>
-            <div class="col-md-2">
-              <label for="saveMediumCategory" class="form-label">중분류</label>
-              <select class="form-select" id="saveMediumCategory" required>
-                <option value="">선택</option>
-              </select>
-            </div>
-            <div class="col-md-2">
-              <label for="saveSmallCategory" class="form-label">소분류</label>
-              <select class="form-select" id="saveSmallCategory" required>
-                <option value="">선택</option>
-              </select>
-            </div>
-            <div class="col-md-2">
-              <label for="savePurchaseType" class="form-label">유형</label>
-              <select class="form-select" id="savePurchaseType" required>
-                <option value="">선택</option>
-              </select>
-            </div>
-            <div class="col-md-2">
-              <label for="savePurchaseDate" class="form-label">발생일</label>
-              <input type="date" class="form-control" id="savePurchaseDate" required>
-            </div>
-            <div class="col-md-2">
-              <label for="savePurchaseTime" class="form-label">발생시간</label>
-              <input type="time" step="1" class="form-control" id="savePurchaseTime">
-            </div>
-            <div class="col-md-4">
-              <label for="saveSupplierName" class="form-label">비용 발생처</label>
-              <input type="text" class="form-control" id="saveSupplierName" maxlength="500" required>
-            </div>
-            <div class="col-md-2">
-              <label for="saveUnitCost" class="form-label">단가</label>
-              <input type="number" class="form-control" id="saveUnitCost" min="0" required>
-            </div>
-            <div class="col-md-2">
-              <label for="saveQuantity" class="form-label">수량</label>
-              <input type="number" class="form-control" id="saveQuantity" min="0" required>
-            </div>
-            <div class="col-md-2">
-              <label for="saveTotalCost" class="form-label">총금액</label>
-              <input type="number" class="form-control" id="saveTotalCost" readonly>
+        <section class="manage-card">
+          <div class="manage-card-header">
+            <div>
+              <h2 class="manage-card-title">비용 저장 및 수정</h2>
+              <p class="manage-card-caption">비용 항목 입력과 수정 작업이 자연스럽게 이어지도록 같은 흐름 안에 배치했습니다.</p>
             </div>
           </div>
 
-          <div class="mt-3">
-            <button type="button" class="btn btn-secondary btn-sm" id="btnSave">입력</button>
-            <button type="button" class="btn btn-secondary btn-sm" id="btnUpdate">수정</button>
-            <button type="button" class="btn btn-secondary btn-sm" id="btnDelete">삭제</button>
-          </div>
-        </form>
+          <form id="purchaseForm">
+            <input type="hidden" id="purchaseId">
 
-        <hr class="my-4">
-
-        <h4 class="mb-3">Excel 비용 조회</h4>
-        <form id="purchaseAutoForm">
-          <div class="row g-3">
-            <div class="col-md-2">
-              <label for="autoStartDate" class="form-label">시작일</label>
-              <input type="date" class="form-control" id="autoStartDate">
-            </div>
-            <div class="col-md-2">
-              <label for="autoEndDate" class="form-label">종료일</label>
-              <input type="date" class="form-control" id="autoEndDate">
-            </div>
-            <div class="col-md-4">
-              <label for="autoSupplierName" class="form-label">비용 발생처</label>
-              <input type="text" class="form-control" id="autoSupplierName" placeholder="매입처 입력">
-            </div>
-            <div class="col-md-2">
-              <label for="autoUploadFileName" class="form-label">파일 업로드</label>
-              <div class="input-group">
-                <input type="text" class="form-control" id="autoUploadFileName" placeholder="excel file upload" readonly>
-                <input type="file" class="d-none" id="autoUploadFile" accept=".xlsx,.xls,.csv">
-                <button type="button" class="btn btn-secondary" id="btnAutoUpload">upload</button>
+            <div class="row g-3">
+              <div class="col-md-2">
+                <label for="saveLargeCategory" class="form-label">대분류</label>
+                <select class="form-select" id="saveLargeCategory" required>
+                  <option value="">선택</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="saveMediumCategory" class="form-label">중분류</label>
+                <select class="form-select" id="saveMediumCategory" required>
+                  <option value="">선택</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="saveSmallCategory" class="form-label">소분류</label>
+                <select class="form-select" id="saveSmallCategory" required>
+                  <option value="">선택</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="savePurchaseType" class="form-label">유형</label>
+                <select class="form-select" id="savePurchaseType" required>
+                  <option value="">선택</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="savePurchaseDate" class="form-label">발생일</label>
+                <input type="date" class="form-control" id="savePurchaseDate" required>
+              </div>
+              <div class="col-md-2">
+                <label for="savePurchaseTime" class="form-label">발생시간</label>
+                <input type="time" step="1" class="form-control" id="savePurchaseTime">
+              </div>
+              <div class="col-md-4">
+                <label for="saveSupplierName" class="form-label">비용 발생처</label>
+                <input type="text" class="form-control" id="saveSupplierName" maxlength="500" required>
+              </div>
+              <div class="col-md-2">
+                <label for="saveUnitCost" class="form-label">단가</label>
+                <input type="number" class="form-control" id="saveUnitCost" min="0" required>
+              </div>
+              <div class="col-md-2">
+                <label for="saveQuantity" class="form-label">수량</label>
+                <input type="number" class="form-control" id="saveQuantity" min="0" required>
+              </div>
+              <div class="col-md-2">
+                <label for="saveTotalCost" class="form-label">총금액</label>
+                <input type="number" class="form-control" id="saveTotalCost" readonly>
               </div>
             </div>
-            <div class="col-md-2 d-flex align-items-end">
-              <button type="button" class="btn btn-secondary btn-sm w-100" id="btnAutoSearch">조회</button>
-            </div>
-          </div>
-        </form>
-        <div class="table-responsive small">
-          <table class="table table-striped table-sm">
-            <thead>
-              <tr>
-                <th>날짜</th>
-                <th>시간</th>
-                <th>비용 발생처</th>
-                <th>금액</th>
-              </tr>
-            </thead>
-            <tbody id="autoResultBody">
-              <tr>
-                <td>날짜 예시</td>
-                <td>시간 예시</td>
-                <td>비용 발생처 예시</td>
-                <td>금액 예시</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="d-flex justify-content-between align-items-center mt-2">
-          <small id="autoPageInfo" class="text-muted">Total 0</small>
-          <nav aria-label="Excel expense paging">
-            <ul id="autoPagination" class="pagination pagination-sm mb-0"></ul>
-          </nav>
-        </div>
 
+            <div class="manage-actions">
+              <button type="button" class="btn manage-btn manage-btn-primary" id="btnSave">입력</button>
+              <button type="button" class="btn manage-btn manage-btn-neutral" id="btnUpdate">수정</button>
+              <button type="button" class="btn manage-btn manage-btn-danger" id="btnDelete">삭제</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="manage-card manage-card--table">
+          <div class="manage-card-header">
+            <div>
+              <h2 class="manage-card-title">Excel 비용 조회</h2>
+              <p class="manage-card-caption">기간과 발생처, 업로드 파일을 기준으로 외부 비용 데이터를 분리해서 확인할 수 있습니다.</p>
+            </div>
+            <span id="autoPageInfo" class="manage-badge">총 0건</span>
+          </div>
+
+          <div style="padding: 0 1.5rem 1.1rem;">
+            <form id="purchaseAutoForm">
+              <div class="row g-3">
+                <div class="col-md-2">
+                  <label for="autoStartDate" class="form-label">시작일</label>
+                  <input type="date" class="form-control" id="autoStartDate">
+                </div>
+                <div class="col-md-2">
+                  <label for="autoEndDate" class="form-label">종료일</label>
+                  <input type="date" class="form-control" id="autoEndDate">
+                </div>
+                <div class="col-md-4">
+                  <label for="autoSupplierName" class="form-label">비용 발생처</label>
+                  <input type="text" class="form-control" id="autoSupplierName" placeholder="매입처 입력">
+                </div>
+                <div class="col-md-2">
+                  <label for="autoUploadFileName" class="form-label">파일 업로드</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="autoUploadFileName" placeholder="excel file upload" readonly>
+                    <input type="file" class="d-none" id="autoUploadFile" accept=".xlsx,.xls,.csv">
+                    <button type="button" class="btn manage-btn manage-btn-neutral" id="btnAutoUpload">upload</button>
+                  </div>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                  <button type="button" class="btn manage-btn manage-btn-primary w-100" id="btnAutoSearch">조회</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="manage-table-wrap">
+            <table class="table manage-table align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>날짜</th>
+                  <th>시간</th>
+                  <th>비용 발생처</th>
+                  <th>금액</th>
+                </tr>
+              </thead>
+              <tbody id="autoResultBody">
+                <tr>
+                  <td>날짜 예시</td>
+                  <td>시간 예시</td>
+                  <td>비용 발생처 예시</td>
+                  <td>금액 예시</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="manage-table-footer">
+            <small>페이지 이동</small>
+            <nav aria-label="Excel expense paging">
+              <ul id="autoPagination" class="pagination pagination-sm mb-0"></ul>
+            </nav>
+          </div>
+        </section>
       </div>
     </main>
   </div>
