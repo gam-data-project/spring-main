@@ -16,4 +16,6 @@ public interface SalesMapper {
                       @Param("productId") Long productId);
     List<SalesMappingDto> findUnmappedBatchByDate(@Param("orderDate") LocalDate orderDate);
 
+    int insertSalesList(@Param("list") List<SalesRequestDto> salesList);
+
 }
