@@ -1,7 +1,7 @@
 package org.example.controller.legacy;
 
 import lombok.RequiredArgsConstructor;
-import org.example.domain.legacy.NewDeliveryFee;
+import org.example.dto.delivery.request.DeliveryFeeRowDto;
 import org.example.service.legacy.NewDeliveryFeeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +17,7 @@ public class NewDeliveryFeeController {
     private final NewDeliveryFeeService newDeliveryFeeService;
 
     @PostMapping("/deliveryFeeData")
-    public ResponseEntity<String> insertDeliveryFee(@RequestBody NewDeliveryFee deliveryFee){
+    public ResponseEntity<String> insertDeliveryFee(@RequestBody DeliveryFeeRowDto deliveryFee){
         // 받은 데이터 확인 (콘솔 출력)
         System.out.println("=== Delivery Fee Data Received ===");
         System.out.println(deliveryFee);

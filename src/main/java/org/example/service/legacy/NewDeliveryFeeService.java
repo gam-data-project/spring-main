@@ -1,7 +1,7 @@
 package org.example.service.legacy;
 
 import lombok.RequiredArgsConstructor;
-import org.example.domain.legacy.NewDeliveryFee;
+import org.example.dto.delivery.request.DeliveryFeeRowDto;
 import org.example.repository.DeliveryFeeMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +13,7 @@ public class NewDeliveryFeeService {
     private final DeliveryFeeMapper deliveryFeeMapper;
 
     @Transactional
-    public int save(NewDeliveryFee fee){
+    public int save(DeliveryFeeRowDto fee){
         return deliveryFeeMapper.insertNewDeliveryFee(fee);
     }
 }

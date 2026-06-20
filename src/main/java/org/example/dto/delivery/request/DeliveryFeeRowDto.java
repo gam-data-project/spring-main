@@ -1,4 +1,4 @@
-package org.example.domain.legacy;
+package org.example.dto.delivery.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class NewDeliveryFee {
+public class DeliveryFeeRowDto {
     //pk useGeneratedKeys로 채워짐
     private Long id;
     //주문번호
