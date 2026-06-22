@@ -13,9 +13,9 @@
     <select id="selectDistinctLargeCategories"
             resultType="org.example.dto.purchase.response.PurchaseOptionDto">
         SELECT DISTINCT c.large_category AS value
-        FROM new_purchase_info p
-        INNER JOIN new_product_work_20260510 pr ON pr.id = p.product_id
-        INNER JOIN new_category c ON c.id = pr.category_id
+        FROM purchases p
+        INNER JOIN products pr ON pr.id = p.product_id
+        INNER JOIN categories c ON c.id = pr.category_id
         ORDER BY c.large_category
     </select>
 
@@ -23,9 +23,9 @@
     <select id="selectDistinctMediumCategoriesByLarge"
             resultType="org.example.dto.purchase.response.PurchaseOptionDto">
         SELECT DISTINCT c.medium_category AS value
-        FROM new_purchase_info p
-        INNER JOIN new_product_work_20260510 pr ON pr.id = p.product_id
-        INNER JOIN new_category c ON c.id = pr.category_id
+        FROM purchases p
+        INNER JOIN products pr ON pr.id = p.product_id
+        INNER JOIN categories c ON c.id = pr.category_id
         WHERE c.large_category = #{largeCategory}
         ORDER BY c.medium_category
     </select>
@@ -34,9 +34,9 @@
     <select id="selectDistinctSmallCategoriesByLargeMedium"
             resultType="org.example.dto.purchase.response.PurchaseOptionDto">
         SELECT DISTINCT c.small_category AS value
-        FROM new_purchase_info p
-        INNER JOIN new_product_work_20260510 pr ON pr.id = p.product_id
-        INNER JOIN new_category c ON c.id = pr.category_id
+        FROM purchases p
+        INNER JOIN products pr ON pr.id = p.product_id
+        INNER JOIN categories c ON c.id = pr.category_id
         WHERE c.large_category = #{largeCategory}
         AND c.medium_category = #{mediumCategory}
         ORDER BY c.small_category
@@ -46,9 +46,9 @@
     <select id="selectDistinctSuppliersByCategory"
             resultType="org.example.dto.purchase.response.PurchaseOptionDto">
         SELECT DISTINCT p.supplier_name AS value
-        FROM new_purchase_info p
-        INNER JOIN new_product_work_20260510 pr ON pr.id = p.product_id
-        INNER JOIN new_category c ON c.id = pr.category_id
+        FROM purchases p
+        INNER JOIN products pr ON pr.id = p.product_id
+        INNER JOIN categories c ON c.id = pr.category_id
         WHERE c.large_category = #{largeCategory}
         AND c.medium_category = #{mediumCategory}
         AND c.small_category = #{smallCategory}
@@ -100,9 +100,9 @@
     <!-- 페이징 총 건수 -->
     <select id="countPurchasePage" resultType="long">
         SELECT COUNT(*)
-        FROM new_purchase_info p
-        INNER JOIN new_product_work_20260510 pr ON pr.id = p.product_id
-        INNER JOIN new_category c ON c.id = pr.category_id
+        FROM purchases p
+        INNER JOIN products pr ON pr.id = p.product_id
+        INNER JOIN categories c ON c.id = pr.category_id
         <include refid="PurchaseFilterWhere"/>
     </select>
 
@@ -123,9 +123,9 @@
         p.purchase_time AS purchaseTime,
         p.created_at AS createdAt,
         p.updated_at AS updatedAt
-        FROM new_purchase_info p
-        INNER JOIN new_product_work_20260510 pr ON pr.id = p.product_id
-        INNER JOIN new_category c ON c.id = pr.category_id
+        FROM purchases p
+        INNER JOIN products pr ON pr.id = p.product_id
+        INNER JOIN categories c ON c.id = pr.category_id
         <include refid="PurchaseFilterWhere"/>
         ORDER BY p.purchase_date DESC, p.id DESC
         LIMIT #{req.limit} OFFSET #{req.offset}
@@ -138,8 +138,8 @@
     <select id="selectDistinctProductsByCategory"
             resultType="org.example.dto.purchase.response.PurchaseOptionDto">
         SELECT DISTINCT pr.product_name AS value
-        FROM new_product_work_20260510 pr
-        INNER JOIN new_category c ON c.id = pr.category_id
+        FROM products pr
+        INNER JOIN categories c ON c.id = pr.category_id
         WHERE c.large_category = #{largeCategory}
         AND c.medium_category = #{mediumCategory}
         AND c.small_category = #{smallCategory}
@@ -150,7 +150,7 @@
     <!-- 분류 경로로 category_id 조회 -->
     <select id="selectCategoryIdByPath" resultType="long">
         SELECT c.id
-        FROM new_category c
+        FROM categories c
         WHERE c.large_category = #{largeCategory}
         AND c.medium_category = #{mediumCategory}
         AND c.small_category = #{smallCategory}
@@ -160,7 +160,7 @@
     <!-- category + product_name으로 product_id 조회 -->
     <select id="selectProductIdByCategoryAndName" resultType="long">
         SELECT pr.id
-        FROM new_product_work_20260510 pr
+        FROM products pr
         WHERE pr.category_id = #{categoryId}
         AND pr.product_name = #{productName}
         AND pr.active = 1
@@ -171,14 +171,14 @@
     <!-- 수정 대상 존재 확인 -->
     <select id="existsPurchaseById" resultType="int">
         SELECT COUNT(*)
-        FROM new_purchase_info
+        FROM purchases
         WHERE id = #{id}
     </select>
 
     <!-- 유니크 중복 확인 -->
     <select id="countByUniqueKey" resultType="int">
         SELECT COUNT(*)
-        FROM new_purchase_info
+        FROM purchases
         WHERE purchase_date = #{purchaseDate}
         AND total_cost = #{totalCost}
         <choose>
@@ -194,7 +194,7 @@
     <!-- 수정 시 본인 제외 유니크 중복 확인 -->
     <select id="countByUniqueKeyExcludingId" resultType="int">
         SELECT COUNT(*)
-        FROM new_purchase_info
+        FROM purchases
         WHERE id != #{id}
         AND purchase_date = #{purchaseDate}
         AND total_cost = #{totalCost}
@@ -210,7 +210,7 @@
 
     <!-- 매입 저장 -->
     <insert id="insertPurchase">
-        INSERT INTO new_purchase_info
+        INSERT INTO purchases
         (
         product_id, purchase_date, purchase_time,
         quantity, unit_cost, total_cost, supplier_name
@@ -225,7 +225,7 @@
     <!-- 유니크 키로 ID 조회 -->
     <select id="findPurchaseIdByUniqueKey" resultType="long">
         SELECT id
-        FROM new_purchase_info
+        FROM purchases
         WHERE purchase_date = #{purchaseDate}
         AND total_cost = #{totalCost}
         <choose>
@@ -242,7 +242,7 @@
 
     <!-- 매입 수정 -->
     <update id="updatePurchaseById">
-        UPDATE new_purchase_info
+        UPDATE purchases
         SET product_id = #{productId},
         purchase_date = #{purchaseDate},
         purchase_time = #{purchaseTime},
@@ -255,7 +255,7 @@
 
     <!-- 매입 삭제 -->
     <delete id="deletePurchaseById">
-        DELETE FROM new_purchase_info
+        DELETE FROM purchases
         WHERE id = #{id}
     </delete>
 
@@ -278,8 +278,8 @@
     <!-- 제품 매핑 조회 총 건수 -->
     <select id="countProductMappingPage" resultType="long">
         SELECT COUNT(*)
-        FROM new_product_work_20260510 pr
-        LEFT JOIN new_category c ON c.id = pr.category_id
+        FROM products pr
+        LEFT JOIN categories c ON c.id = pr.category_id
         <include refid="ProductMappingFilterWhere"/>
     </select>
 
@@ -294,8 +294,8 @@
         pr.start_date     AS startDate,
         pr.end_date       AS endDate,
         CASE WHEN pr.active = 1 THEN '활성' ELSE '비활성' END AS activeLabel
-        FROM new_product_work_20260510 pr
-        LEFT JOIN new_category c ON c.id = pr.category_id
+        FROM products pr
+        LEFT JOIN categories c ON c.id = pr.category_id
         <include refid="ProductMappingFilterWhere"/>
         ORDER BY pr.updated_at DESC, pr.id DESC
         LIMIT #{req.limit} OFFSET #{req.offset}

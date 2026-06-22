@@ -8,7 +8,7 @@
     <select id="selectDistinctMediumCategoriesByLarge"
             resultType="org.example.dto.expense.response.ExpenseOptionDto">
         SELECT DISTINCT c.medium_category AS value
-        FROM new_category c
+        FROM categories c
         WHERE c.large_category = #{largeCategory}
         ORDER BY c.medium_category
     </select>
@@ -17,7 +17,7 @@
     <select id="selectDistinctSmallCategoriesByLargeMedium"
             resultType="org.example.dto.expense.response.ExpenseOptionDto">
         SELECT DISTINCT c.small_category AS value
-        FROM new_category c
+        FROM categories c
         WHERE c.large_category = #{largeCategory}
         AND c.medium_category = #{mediumCategory}
         ORDER BY c.small_category
@@ -27,7 +27,7 @@
     <select id="selectDistinctExpenseTypesByCategory"
             resultType="org.example.dto.expense.response.ExpenseOptionDto">
         SELECT DISTINCT e.expense_type AS value
-        FROM new_expense_info e INNER JOIN new_category c
+        FROM expenses e INNER JOIN categories c
         ON c.id = e.category_id
         WHERE c.large_category = #{largeCategory}
         AND c.medium_category = #{mediumCategory}
@@ -72,8 +72,8 @@
     <!-- 페이징용 총 건수 조회 -->
     <select id="countExpensePage" resultType="long">
         SELECT COUNT(*)
-        FROM new_expense_info e
-        INNER JOIN new_category c ON c.id = e.category_id
+        FROM expenses e
+        INNER JOIN categories c ON c.id = e.category_id
         <include refid="ExpenseFilterWhere"/>
     </select>
 
@@ -94,8 +94,8 @@
         e.expense_time AS expenseTime,
         e.created_at AS createdAt,
         e.updated_at AS updatedAt
-        FROM new_expense_info e
-        INNER JOIN new_category c ON c.id = e.category_id
+        FROM expenses e
+        INNER JOIN categories c ON c.id = e.category_id
         <include refid="ExpenseFilterWhere"/>
         ORDER BY e.expense_date DESC, e.id DESC
         LIMIT #{req.limit} OFFSET #{req.offset}
@@ -106,7 +106,7 @@
     <!-- 대/중/소 분류로 category_id 조회 -->
     <select id="selectCategoryIdByPath" resultType="long">
         SELECT c.id
-        FROM new_category c
+        FROM categories c
         WHERE c.large_category = #{largeCategory}
         AND c.medium_category = #{mediumCategory}
         AND c.small_category = #{smallCategory}
@@ -116,7 +116,7 @@
     <!-- 유니크 키 중복 확인 -->
     <select id="countByUniqueKey" resultType="int">
         SELECT COUNT(*)
-        FROM new_expense_info
+        FROM expenses
         WHERE expense_date = #{expenseDate}
         AND total_cost = #{totalCost}
         <choose>
@@ -132,7 +132,7 @@
     <!-- 수정 시 본인 제외 유니크 키 중복 확인 -->
     <select id="countByUniqueKeyExcludingId" resultType="int">
         SELECT COUNT(*)
-        FROM new_expense_info
+        FROM expenses
         WHERE id != #{id}
         AND expense_date = #{expenseDate}
         AND total_cost = #{totalCost}
@@ -148,7 +148,7 @@
 
     <!-- 비용 신규 등록 -->
     <insert id="insertExpense">
-        INSERT INTO new_expense_info
+        INSERT INTO expenses
         (
         expense_date,
         expense_time,
@@ -175,7 +175,7 @@
     <!-- 유니크 키로 ID 조회 -->
     <select id="findExpenseIdByUniqueKey" resultType="long">
         SELECT id
-        FROM new_expense_info
+        FROM expenses
         WHERE expense_date = #{expenseDate}
         AND total_cost = #{totalCost}
         <choose>
@@ -192,7 +192,7 @@
 
     <!-- ID 기준 비용 수정 -->
     <update id="updateExpenseById">
-        UPDATE new_expense_info
+        UPDATE expenses
         SET category_id = #{categoryId},
         expense_date = #{expenseDate},
         expense_time = #{expenseTime},
@@ -206,7 +206,7 @@
 
     <!-- ID 기준 비용 삭제 -->
     <delete id="deleteExpenseById">
-        DELETE FROM new_expense_info
+        DELETE FROM expenses
         WHERE id = #{id}
     </delete>
 

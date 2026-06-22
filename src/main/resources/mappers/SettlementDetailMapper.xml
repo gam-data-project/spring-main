@@ -7,14 +7,14 @@
     <select id="selectDistinctLargeCategories"
             resultType="org.example.dto.settlementDetail.response.SettlementDetailOptionDto">
         SELECT DISTINCT large_category AS value
-        FROM new_category
+        FROM categories
         ORDER BY large_category
     </select>
 
     <select id="selectDistinctMediumCategoriesByLarge"
             resultType="org.example.dto.settlementDetail.response.SettlementDetailOptionDto">
         SELECT DISTINCT medium_category AS value
-        FROM new_category
+        FROM categories
         WHERE large_category = #{largeCategory}
         ORDER BY medium_category
     </select>
@@ -22,7 +22,7 @@
     <select id="selectDistinctSmallCategoriesByLargeMedium"
             resultType="org.example.dto.settlementDetail.response.SettlementDetailOptionDto">
         SELECT DISTINCT small_category AS value
-        FROM new_category
+        FROM categories
         WHERE large_category = #{largeCategory}
         AND medium_category = #{mediumCategory}
         ORDER BY small_category
@@ -41,9 +41,9 @@
         c.medium_category,
         c.small_category,
         s.product_total
-        FROM new_sales_work_20260510 s
-        LEFT JOIN new_product_work_20260510 p ON p.id = s.product_id
-        LEFT JOIN new_category c ON c.id = p.category_id
+        FROM sales s
+        LEFT JOIN products p ON p.id = s.product_id
+        LEFT JOIN categories c ON c.id = p.category_id
         WHERE 1 = 1
         <if test="req.startDate != null">
             AND s.order_date <![CDATA[>=]]> #{req.startDate}
@@ -69,9 +69,9 @@
         c.medium_category,
         c.small_category,
         pi.total_cost
-        FROM new_purchase_info pi
-        LEFT JOIN new_product_work_20260510 p ON p.id = pi.product_id
-        LEFT JOIN new_category c ON c.id = p.category_id
+        FROM purchases pi
+        LEFT JOIN products p ON p.id = pi.product_id
+        LEFT JOIN categories c ON c.id = p.category_id
         WHERE 1 = 1
         <if test="req.startDate != null">
             AND pi.purchase_date <![CDATA[>=]]> #{req.startDate}
@@ -133,7 +133,7 @@
         d.order_number,
         d.platform,
         SUM(d.total_delivery_fee) AS total_delivery_fee
-        FROM new_delivery_fee d
+        FROM delivery_fees d
         WHERE d.shipping_included = 0
         GROUP BY d.order_number, d.platform
         ),

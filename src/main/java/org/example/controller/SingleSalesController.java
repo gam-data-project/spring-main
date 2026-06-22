@@ -2,7 +2,7 @@ package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.dto.sales.request.SalesRequestDto;
-import org.example.service.sales.NewSalesService;
+import org.example.service.sales.SingleSalesService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/renewal")
 @RequiredArgsConstructor
-public class SalesController {
+public class SingleSalesController {
 
-    private final NewSalesService newSalesService;
+    private final SingleSalesService newSalesService;
 
     @PostMapping("/salesData")
     public ResponseEntity<String> insertNewSales(@RequestBody SalesRequestDto sales){

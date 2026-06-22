@@ -5,11 +5,11 @@
 
     <select id="selectMonthlySettlementReport"
             resultType="org.example.dto.settlementReport.response.SettlementReportRowDto">
-        WITH sales AS (
+        WITH sales_monthly AS (
         SELECT
         DATE_FORMAT(order_date, '%Y-%m') AS ym,
         SUM(product_total) AS amount
-        FROM new_sales_work_20260510
+        FROM sales
         WHERE order_date <![CDATA[>=]]> #{startDate}
         AND order_date <![CDATA[<]]> #{endDate}
         GROUP BY DATE_FORMAT(order_date, '%Y-%m')
@@ -23,8 +23,8 @@
         df.order_number,
         sw.order_date,
         df.total_delivery_fee
-        FROM new_delivery_fee df
-        JOIN new_sales_work_20260510 sw
+        FROM delivery_fees df
+        JOIN sales sw
         ON sw.order_number = df.order_number
         AND sw.platform = df.platform
         WHERE sw.shipping_included = 1
@@ -37,7 +37,7 @@
         SELECT
         s.ym,
         s.amount + COALESCE(ms.amount, 0) AS amount
-        FROM sales s
+        FROM sales_monthly s
         LEFT JOIN monthly_shipping_extra ms
         ON s.ym = ms.ym
         ),
@@ -45,7 +45,7 @@
         SELECT
         DATE_FORMAT(purchase_date, '%Y-%m') AS ym,
         SUM(total_cost) AS amount
-        FROM new_purchase_info
+        FROM purchases
         WHERE product_id IS NOT NULL
         AND purchase_date <![CDATA[>=]]> #{startDate}
         AND purchase_date <![CDATA[<]]> #{endDate}
@@ -55,7 +55,7 @@
         SELECT
         DATE_FORMAT(expense_date, '%Y-%m') AS ym,
         SUM(total_cost) AS amount
-        FROM new_expense_info
+        FROM expenses
         WHERE expense_date <![CDATA[>=]]> #{startDate}
         AND expense_date <![CDATA[<]]> #{endDate}
         GROUP BY DATE_FORMAT(expense_date, '%Y-%m')

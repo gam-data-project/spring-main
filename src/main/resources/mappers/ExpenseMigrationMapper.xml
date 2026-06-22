@@ -5,7 +5,7 @@
 <mapper namespace="org.example.repository.ExpenseMigrationMapper">
 
     <insert id="insertNewExpenseList" parameterType="java.util.List">
-        INSERT INTO new_expense_info
+        INSERT INTO expenses
         (
         expense_date,
         expense_time,

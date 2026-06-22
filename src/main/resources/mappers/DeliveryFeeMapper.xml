@@ -4,7 +4,7 @@
 <mapper namespace="org.example.repository.DeliveryFeeMapper">
 
     <insert id="insertDeliveryFeeList" parameterType="java.util.List">
-        INSERT INTO new_delivery_fee
+        INSERT INTO delivery_fees
         (
         order_number,
         platform,
@@ -33,7 +33,7 @@
 
     <insert id="insertNewDeliveryFee" parameterType="org.example.dto.delivery.request.DeliveryFeeRowDto"
             useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO new_delivery_fee
+        INSERT INTO delivery_fees
         (
         order_number,
         platform,

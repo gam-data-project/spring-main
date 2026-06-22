@@ -1,4 +1,4 @@
-package org.example.service.legacy;
+package org.example.service.delivery;
 
 import lombok.RequiredArgsConstructor;
 import org.example.dto.delivery.request.DeliveryFeeRowDto;
@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class NewDeliveryFeeService {
+public class SingleDeliveryFeeService {
 
     private final DeliveryFeeMapper deliveryFeeMapper;
 

@@ -5,7 +5,7 @@
     <insert id="upsertAndReturnId"
             parameterType="org.example.dto.product.response.ProductUpsertDto"
             useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO new_product_work_20260510
+        INSERT INTO products
         (product_name, unit_price, platform, shipping_included ,start_date, end_date, active)
         VALUES
         (#{productName}, #{unitPrice}, #{platform}, #{shippingIncluded} , #{startDate}, #{endDate} , TRUE)
@@ -22,7 +22,7 @@
 
     <!-- 기준일(cutoff) 기준: end_date + 3개월 <= cutoff 이면 active=false -->
     <update id="deactivateProduct">
-        UPDATE new_product_work_20260510
+        UPDATE products
         SET active = NULL
         WHERE active = TRUE
         AND DATE_ADD(end_date, INTERVAL 4 MONTH) <![CDATA[<=]]> #{date}
