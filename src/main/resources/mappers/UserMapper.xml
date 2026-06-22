@@ -7,14 +7,14 @@
     <select id="findByEmail" resultType="org.example.domain.User">
 
         SELECT *
-        FROM user
+        FROM users
         WHERE username = #{username}
 
     </select>
 
     <insert id="saveUser" parameterType="org.example.dto.user.request.AddUserRequest">
 
-        INSERT INTO user (username, password)
+        INSERT INTO users (username, password)
         VALUES(#{username}, #{password})
 
     </insert>

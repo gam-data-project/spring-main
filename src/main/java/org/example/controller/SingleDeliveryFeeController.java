@@ -1,8 +1,8 @@
-package org.example.controller.legacy;
+package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.dto.delivery.request.DeliveryFeeRowDto;
-import org.example.service.legacy.NewDeliveryFeeService;
+import org.example.service.delivery.SingleDeliveryFeeService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/renewal")
 @RequiredArgsConstructor
-public class NewDeliveryFeeController {
+public class SingleDeliveryFeeController {
 
-    private final NewDeliveryFeeService newDeliveryFeeService;
+    private final SingleDeliveryFeeService newDeliveryFeeService;
 
     @PostMapping("/deliveryFeeData")
     public ResponseEntity<String> insertDeliveryFee(@RequestBody DeliveryFeeRowDto deliveryFee){

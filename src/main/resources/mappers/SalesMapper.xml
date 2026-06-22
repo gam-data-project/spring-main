@@ -4,7 +4,7 @@
 <mapper namespace="org.example.repository.SalesMapper">
 
     <insert id="insertSalesList" parameterType="java.util.List">
-        INSERT INTO new_sales_work_20260510
+        INSERT INTO sales
         (
         order_number,
         platform,
@@ -38,7 +38,7 @@
 
     <insert id="insertNewSales" parameterType="org.example.dto.sales.request.SalesRequestDto"
             useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO new_sales_work_20260510
+        INSERT INTO sales
         (
         order_number,
         platform,
@@ -73,7 +73,7 @@
             platform,
             shipping_included AS shippingIncluded,
             order_date AS orderDate
-        FROM new_sales_work_20260510
+        FROM sales
         WHERE product_id IS NULL
         ORDER BY id
         LIMIT 1
@@ -82,7 +82,7 @@
     </select>
 
     <update id="updateProductIdMapping">
-        UPDATE new_sales_work_20260510
+        UPDATE sales
         SET product_id = #{productId}
         WHERE id = #{salesId}
     </update>
@@ -98,7 +98,7 @@
         platform,
         shipping_included AS shippingIncluded,
         order_date        AS orderDate
-        FROM new_sales_work_20260510
+        FROM sales
         WHERE product_id IS NULL
         AND order_date = #{orderDate}
         ORDER BY id

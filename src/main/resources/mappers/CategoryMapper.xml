@@ -8,7 +8,7 @@
     <select id="selectDistinctLargeCategories"
             resultType="org.example.dto.category.response.CategoryOptionDto">
         SELECT DISTINCT large_category AS value
-        FROM new_category
+        FROM categories
         ORDER BY large_category
     </select>
 
@@ -17,7 +17,7 @@
             parameterType="string"
             resultType="org.example.dto.category.response.CategoryOptionDto">
         SELECT DISTINCT medium_category AS value
-        FROM new_category
+        FROM categories
         WHERE large_category = #{largeCategory}
         ORDER BY medium_category
     </select>
@@ -26,7 +26,7 @@
     <select id="selectDistinctSmallCategoriesByLargeMedium"
             resultType="org.example.dto.category.response.CategoryOptionDto">
         SELECT DISTINCT small_category AS value
-        FROM new_category
+        FROM categories
         WHERE large_category = #{largeCategory}
         AND medium_category = #{mediumCategory}
         ORDER BY small_category
@@ -56,7 +56,7 @@
     <!-- 페이징용 총 건수 조회 -->
     <select id="countCategoryPage" resultType="long">
         SELECT COUNT(*)
-        FROM new_category
+        FROM categories
         <include refid="CategoryFilterWhere"/>
     </select>
 
@@ -70,7 +70,7 @@
         small_category AS smallCategory,
         created_at AS createdAt,
         updated_at AS updatedAt
-        FROM new_category
+        FROM categories
         <include refid="CategoryFilterWhere"/>
         ORDER BY id DESC
         LIMIT #{req.limit} OFFSET #{req.offset}
@@ -81,7 +81,7 @@
     <!-- 유니크 키 중복 확인 -->
     <select id="countByUniqueKey" resultType="int">
         SELECT COUNT(*)
-        FROM new_category
+        FROM categories
         WHERE large_category = #{largeCategory}
         AND medium_category = #{mediumCategory}
         AND small_category = #{smallCategory}
@@ -90,7 +90,7 @@
     <!-- 수정 시 본인 제외 중복 확인 -->
     <select id="countByUniqueKeyExcludingId" resultType="int">
         SELECT COUNT(*)
-        FROM new_category
+        FROM categories
         WHERE id != #{id}
         AND large_category = #{largeCategory}
         AND medium_category = #{mediumCategory}
@@ -99,7 +99,7 @@
 
     <!-- 카테고리 신규 등록 -->
     <insert id="insertCategory">
-        INSERT INTO new_category
+        INSERT INTO categories
         (
         large_category,
         medium_category,
@@ -116,7 +116,7 @@
     <!-- 유니크 키로 ID 조회 -->
     <select id="findIdByUniqueKey" resultType="long">
         SELECT id
-        FROM new_category
+        FROM categories
         WHERE large_category = #{largeCategory}
         AND medium_category = #{mediumCategory}
         AND small_category = #{smallCategory}
@@ -125,7 +125,7 @@
 
     <!-- ID 기준 카테고리 수정 -->
     <update id="updateCategoryById">
-        UPDATE new_category
+        UPDATE categories
         SET large_category = #{largeCategory},
         medium_category = #{mediumCategory},
         small_category = #{smallCategory}
@@ -134,7 +134,7 @@
 
     <!-- ID 기준 카테고리 삭제 -->
     <delete id="deleteCategoryById">
-        DELETE FROM new_category
+        DELETE FROM categories
         WHERE id = #{id}
     </delete>
 

@@ -6,7 +6,7 @@
 <mapper namespace="org.example.repository.PurchaseMigrationMapper">
 
     <insert id="insertNewPurchaseList" parameterType="java.util.List">
-        INSERT INTO new_purchase_info
+        INSERT INTO purchases
         (
         product_id,
         purchase_date,
