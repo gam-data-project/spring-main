@@ -18,7 +18,7 @@ permissions:
 
 env:
   # ECR이 있는 AWS 리전
-  AWS_REGION: us-east-1
+  AWS_REGION: ap-northeast-2
   # ECR 리포지토리 이름
   ECR_REPOSITORY: spring-main
 
