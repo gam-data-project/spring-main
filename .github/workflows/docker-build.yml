@@ -8,6 +8,7 @@ on:
   pull_request:
     branches:
       - main
+  workflow_dispatch: # GitHub 화면에서 수동 실행 가능
 
 permissions:
   contents: read      # 저장소 코드 읽기 권한
