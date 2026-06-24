@@ -10,4 +10,4 @@ WORKDIR /app
 COPY build/libs/gamproject-1.0.jar app.jar
 
 # 실행 명령
-#ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
