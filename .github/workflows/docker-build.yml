@@ -115,26 +115,26 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           # pem 파일 내용 전체
           key: ${{ secrets.EC2_SSH_KEY }}
-          # 명령 실패 시 중단
-          script_stop: true
+
           envs: AWS_REGION,REGISTRY,IMAGE_URI,SPRING_DATASOURCE_URL,SPRING_DATASOURCE_USERNAME,SPRING_DATASOURCE_PASSWORD,EXCEL_COMMON_IMPORT_BASE_DIR,EXCEL_COMMON_IMPORT_RECIPIENT_FILTER
           script: |
+            set -e
             # EC2에 필요한 디렉터리 생성
             mkdir -p /home/ubuntu/gamfile
 
             # EC2에서 ECR 로그인
             aws ecr get-login-password --region "$AWS_REGION" \
-              | docker login --username AWS --password-stdin "$REGISTRY"
+              | sudo docker login --username AWS --password-stdin "$REGISTRY"
 
             # 새 이미지 pull
-            docker pull "$IMAGE_URI"
+            sudo docker pull "$IMAGE_URI"
 
             # 기존 spring-main 컨테이너가 있으면 강제 삭제
-            docker rm -f spring-main || true
+            sudo docker rm -f spring-main || true
 
             # 새 컨테이너 실행
             # Dockerfile에 ENTRYPOINT가 없어서 java -jar app.jar를 직접 붙임
-            docker run -d \
+            sudo docker run -d \
               --name spring-main \
               --restart unless-stopped \
               -p 8080:8080 \
