@@ -1,0 +1,1928 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+  <head><script src="../js/color-modes.js"></script>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.122.0">
+    <title>Dashboard Template · Bootstrap v5.3</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/dashboard/">
+
+    
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+
+<link href="../css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        width: 100%;
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .btn-bd-primary {
+        --bd-violet-bg: #712cf9;
+        --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+
+        --bs-btn-font-weight: 600;
+        --bs-btn-color: var(--bs-white);
+        --bs-btn-bg: var(--bd-violet-bg);
+        --bs-btn-border-color: var(--bd-violet-bg);
+        --bs-btn-hover-color: var(--bs-white);
+        --bs-btn-hover-bg: #6528e0;
+        --bs-btn-hover-border-color: #6528e0;
+        --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+        --bs-btn-active-color: var(--bs-btn-hover-color);
+        --bs-btn-active-bg: #5a23c8;
+        --bs-btn-active-border-color: #5a23c8;
+      }
+
+      .bd-mode-toggle {
+        z-index: 1500;
+      }
+
+      .bd-mode-toggle .dropdown-menu .active .bi {
+        display: block !important;
+      }
+
+      :root {
+        --manage-accent: #e85d75;
+        --manage-accent-dark: #cf4a62;
+        --manage-ink: #1f2328;
+        --manage-muted: #6c757d;
+        --manage-surface-soft: #f7f8fb;
+        --manage-line: #e7e9ef;
+      }
+
+      body {
+        background:
+          radial-gradient(circle at top right, rgba(232, 93, 117, 0.08), transparent 28%),
+          linear-gradient(180deg, #fcfcfd 0%, #f5f7fb 100%);
+        color: var(--manage-ink);
+      }
+
+      .manage-page {
+        padding: 2rem 0 3rem;
+      }
+
+      .manage-header {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1.4rem;
+      }
+
+      .manage-kicker {
+        display: inline-block;
+        margin-bottom: 0.55rem;
+        color: var(--manage-accent);
+        font-size: 0.82rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .manage-title {
+        margin: 0;
+        font-size: clamp(1.9rem, 3vw, 2.5rem);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+      }
+
+      .manage-subtitle {
+        margin: 0.45rem 0 0;
+        color: var(--manage-muted);
+        font-size: 0.98rem;
+      }
+
+      .manage-rule {
+        height: 1px;
+        margin: 1.35rem 0 1.8rem;
+        border: 0;
+        background: linear-gradient(90deg, rgba(31, 35, 40, 0.12), rgba(31, 35, 40, 0.03));
+      }
+
+      .manage-layout {
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      .manage-card {
+        border: 1px solid rgba(31, 35, 40, 0.06);
+        border-radius: 1.45rem;
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 18px 42px rgba(17, 24, 39, 0.08);
+        padding: 1.45rem 1.5rem 1.55rem;
+      }
+
+      .manage-card--table {
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .manage-card-header {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1.15rem;
+      }
+
+      .manage-card--table .manage-card-header {
+        padding: 1.35rem 1.5rem 1rem;
+        margin-bottom: 0;
+      }
+
+      .manage-card-title {
+        margin: 0;
+        font-size: 1.12rem;
+        font-weight: 700;
+      }
+
+      .manage-card-caption {
+        margin: 0.3rem 0 0;
+        color: var(--manage-muted);
+        font-size: 0.92rem;
+      }
+
+      .manage-badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.52rem 0.85rem;
+        border-radius: 999px;
+        background: var(--manage-surface-soft);
+        color: #556070;
+        font-size: 0.83rem;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .manage-card .form-label {
+        color: #616a7d;
+        font-size: 0.84rem;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+      }
+
+      .manage-card .form-select,
+      .manage-card .form-control {
+        min-height: 3rem;
+        border-radius: 0.95rem;
+        border-color: #d7dce5;
+        padding-left: 0.95rem;
+        padding-right: 0.95rem;
+        font-weight: 600;
+        box-shadow: none;
+      }
+
+      .manage-card .form-select:focus,
+      .manage-card .form-control:focus {
+        border-color: rgba(232, 93, 117, 0.55);
+        box-shadow: 0 0 0 0.25rem rgba(232, 93, 117, 0.12);
+      }
+
+      .manage-card .input-group > .form-control {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      .manage-card .input-group > .btn {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+
+      .manage-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        margin-top: 1.25rem;
+      }
+
+      .manage-btn {
+        min-width: 108px;
+        height: 2.9rem;
+        padding: 0 1.2rem;
+        border: 1px solid transparent;
+        border-radius: 0.95rem;
+        font-weight: 700;
+        font-size: 0.95rem;
+        transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+      }
+
+      .manage-btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .manage-btn-primary {
+        background: linear-gradient(135deg, var(--manage-accent), #f2748a);
+        color: #fff;
+        box-shadow: 0 14px 30px rgba(232, 93, 117, 0.24);
+      }
+
+      .manage-btn-primary:hover {
+        background: linear-gradient(135deg, var(--manage-accent-dark), var(--manage-accent));
+        color: #fff;
+      }
+
+      .manage-btn-soft {
+        background: #fff6f7;
+        border-color: #f4c7cf;
+        color: #cf4a62;
+      }
+
+      .manage-btn-soft:hover {
+        background: #fff0f3;
+        color: #b63d54;
+      }
+
+      .manage-btn-neutral {
+        background: #f4f6fb;
+        border-color: #dde3ee;
+        color: #566173;
+      }
+
+      .manage-btn-neutral:hover {
+        background: #edf1f7;
+        color: #404858;
+      }
+
+      .manage-btn-danger {
+        background: #fff3f4;
+        border-color: #f2c5cb;
+        color: #c24a59;
+      }
+
+      .manage-btn-danger:hover {
+        background: #ffebee;
+        color: #a93849;
+      }
+
+      .manage-table-wrap {
+        overflow: auto;
+      }
+
+      .manage-table {
+        margin: 0;
+        --bs-table-bg: transparent;
+      }
+
+      .manage-table thead th {
+        padding: 1rem 1.15rem;
+        border-bottom-width: 1px;
+        border-color: var(--manage-line);
+        background: linear-gradient(180deg, #fbfbfd 0%, #f4f6fa 100%);
+        color: #495164;
+        font-size: 0.84rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .manage-table tbody td,
+      .manage-table tbody th {
+        padding: 0.95rem 1.15rem;
+        border-color: var(--manage-line);
+        vertical-align: middle;
+      }
+
+      .manage-table tbody tr:hover {
+        background-color: rgba(17, 24, 39, 0.02);
+      }
+
+      .manage-table-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem 1.5rem 1.2rem;
+        border-top: 1px solid rgba(31, 35, 40, 0.06);
+      }
+
+      .manage-table-footer small {
+        color: var(--manage-muted);
+        font-weight: 600;
+      }
+
+      .manage-card .pagination {
+        --bs-pagination-padding-x: 0.78rem;
+        --bs-pagination-padding-y: 0.42rem;
+        --bs-pagination-color: #596579;
+        --bs-pagination-border-color: #dde3ee;
+        --bs-pagination-hover-color: var(--manage-accent-dark);
+        --bs-pagination-hover-bg: #fff5f7;
+        --bs-pagination-hover-border-color: #f3c7ce;
+        --bs-pagination-focus-color: var(--manage-accent-dark);
+        --bs-pagination-focus-bg: #fff5f7;
+        --bs-pagination-focus-box-shadow: 0 0 0 0.2rem rgba(232, 93, 117, 0.14);
+        --bs-pagination-active-bg: var(--manage-accent);
+        --bs-pagination-active-border-color: var(--manage-accent);
+      }
+
+      @media (max-width: 767.98px) {
+        .manage-page {
+          padding-top: 1.4rem;
+        }
+
+        .manage-card {
+          padding: 1.2rem 1rem 1.25rem;
+        }
+
+        .manage-card--table {
+          padding: 0;
+        }
+
+        .manage-card--table .manage-card-header,
+        .manage-table-footer {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+
+        .manage-table-footer {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .manage-btn {
+          width: 100%;
+        }
+      }
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="../css/dashboard.css" rel="stylesheet">
+  </head>
+  <body>
+    <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+      <symbol id="check2" viewBox="0 0 16 16">
+        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+      </symbol>
+      <symbol id="circle-half" viewBox="0 0 16 16">
+        <path d="M8 15A7 7 0 1 0 8 1v14zm0 1A8 8 0 1 1 8 0a8 8 0 0 1 0 16z"/>
+      </symbol>
+      <symbol id="moon-stars-fill" viewBox="0 0 16 16">
+        <path d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"/>
+        <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.734 1.734 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.734 1.734 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.734 1.734 0 0 0 1.097-1.097l.387-1.162zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.156 1.156 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.156 1.156 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732L13.863.1z"/>
+      </symbol>
+      <symbol id="sun-fill" viewBox="0 0 16 16">
+        <path d="M8 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z"/>
+      </symbol>
+    </svg>
+
+    <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
+      <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center"
+              id="bd-theme"
+              type="button"
+              aria-expanded="false"
+              data-bs-toggle="dropdown"
+              aria-label="Toggle theme (auto)">
+        <svg class="bi my-1 theme-icon-active" width="1em" height="1em"><use href="#circle-half"></use></svg>
+        <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
+        <li>
+          <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
+            <svg class="bi me-2 opacity-50" width="1em" height="1em"><use href="#sun-fill"></use></svg>
+            Light
+            <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark" aria-pressed="false">
+            <svg class="bi me-2 opacity-50" width="1em" height="1em"><use href="#moon-stars-fill"></use></svg>
+            Dark
+            <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="auto" aria-pressed="true">
+            <svg class="bi me-2 opacity-50" width="1em" height="1em"><use href="#circle-half"></use></svg>
+            Auto
+            <svg class="bi ms-auto d-none" width="1em" height="1em"><use href="#check2"></use></svg>
+          </button>
+        </li>
+      </ul>
+    </div>
+
+    
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+  <symbol id="calendar3" viewBox="0 0 16 16">
+    <path d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
+    <path d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+  </symbol>
+  <symbol id="cart" viewBox="0 0 16 16">
+    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+  </symbol>
+  <symbol id="chevron-right" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+  </symbol>
+  <symbol id="door-closed" viewBox="0 0 16 16">
+    <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V2zm1 13h8V2H4v13z"/>
+    <path d="M9 9a1 1 0 1 0 2 0 1 1 0 0 0-2 0z"/>
+  </symbol>
+  <symbol id="file-earmark" viewBox="0 0 16 16">
+    <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
+  </symbol>
+  <symbol id="file-earmark-text" viewBox="0 0 16 16">
+    <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>
+    <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
+  </symbol>
+  <symbol id="gear-wide-connected" viewBox="0 0 16 16">
+    <path d="M7.068.727c.243-.97 1.62-.97 1.864 0l.071.286a.96.96 0 0 0 1.622.434l.205-.211c.695-.719 1.888-.03 1.613.931l-.08.284a.96.96 0 0 0 1.187 1.187l.283-.081c.96-.275 1.65.918.931 1.613l-.211.205a.96.96 0 0 0 .434 1.622l.286.071c.97.243.97 1.62 0 1.864l-.286.071a.96.96 0 0 0-.434 1.622l.211.205c.719.695.03 1.888-.931 1.613l-.284-.08a.96.96 0 0 0-1.187 1.187l.081.283c.275.96-.918 1.65-1.613.931l-.205-.211a.96.96 0 0 0-1.622.434l-.071.286c-.243.97-1.62.97-1.864 0l-.071-.286a.96.96 0 0 0-1.622-.434l-.205.211c-.695.719-1.888.03-1.613-.931l.08-.284a.96.96 0 0 0-1.186-1.187l-.284.081c-.96.275-1.65-.918-.931-1.613l.211-.205a.96.96 0 0 0-.434-1.622l-.286-.071c-.97-.243-.97-1.62 0-1.864l.286-.071a.96.96 0 0 0 .434-1.622l-.211-.205c-.719-.695-.03-1.888.931-1.613l.284.08a.96.96 0 0 0 1.187-1.186l-.081-.284c-.275-.96.918-1.65 1.613-.931l.205.211a.96.96 0 0 0 1.622-.434l.071-.286zM12.973 8.5H8.25l-2.834 3.779A4.998 4.998 0 0 0 12.973 8.5zm0-1a4.998 4.998 0 0 0-7.557-3.779l2.834 3.78h4.723zM5.048 3.967c-.03.021-.058.043-.087.065l.087-.065zm-.431.355A4.984 4.984 0 0 0 3.002 8c0 1.455.622 2.765 1.615 3.678L7.375 8 4.617 4.322zm.344 7.646.087.065-.087-.065z"/>
+  </symbol>
+  <symbol id="graph-up" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M0 0h1v15h15v1H0V0Zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07Z"/>
+  </symbol>
+  <symbol id="house-fill" viewBox="0 0 16 16">
+    <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293L8.707 1.5Z"/>
+    <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6Z"/>
+  </symbol>
+  <symbol id="list" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+  </symbol>
+  <symbol id="people" viewBox="0 0 16 16">
+    <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8Zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022ZM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816ZM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0Zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z"/>
+  </symbol>
+  <symbol id="plus-circle" viewBox="0 0 16 16">
+    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+  </symbol>
+  <symbol id="puzzle" viewBox="0 0 16 16">
+    <path d="M3.112 3.645A1.5 1.5 0 0 1 4.605 2H7a.5.5 0 0 1 .5.5v.382c0 .696-.497 1.182-.872 1.469a.459.459 0 0 0-.115.118.113.113 0 0 0-.012.025L6.5 4.5v.003l.003.01c.004.01.014.028.036.053a.86.86 0 0 0 .27.194C7.09 4.9 7.51 5 8 5c.492 0 .912-.1 1.19-.24a.86.86 0 0 0 .271-.194.213.213 0 0 0 .039-.063v-.009a.112.112 0 0 0-.012-.025.459.459 0 0 0-.115-.118c-.375-.287-.872-.773-.872-1.469V2.5A.5.5 0 0 1 9 2h2.395a1.5 1.5 0 0 1 1.493 1.645L12.645 6.5h.237c.195 0 .42-.147.675-.48.21-.274.528-.52.943-.52.568 0 .947.447 1.154.862C15.877 6.807 16 7.387 16 8s-.123 1.193-.346 1.638c-.207.415-.586.862-1.154.862-.415 0-.733-.246-.943-.52-.255-.333-.48-.48-.675-.48h-.237l.243 2.855A1.5 1.5 0 0 1 11.395 14H9a.5.5 0 0 1-.5-.5v-.382c0-.696.497-1.182.872-1.469a.459.459 0 0 0 .115-.118.113.113 0 0 0 .012-.025L9.5 11.5v-.003a.214.214 0 0 0-.039-.064.859.859 0 0 0-.27-.193C8.91 11.1 8.49 11 8 11c-.491 0-.912.1-1.19.24a.859.859 0 0 0-.271.194.214.214 0 0 0-.039.063v.003l.001.006a.113.113 0 0 0 .012.025c.016.027.05.068.115.118.375.287.872.773.872 1.469v.382a.5.5 0 0 1-.5.5H4.605a1.5 1.5 0 0 1-1.493-1.645L3.356 9.5h-.238c-.195 0-.42.147-.675.48-.21.274-.528.52-.943.52-.568 0-.947-.447-1.154-.862C.123 9.193 0 8.613 0 8s.123-1.193.346-1.638C.553 5.947.932 5.5 1.5 5.5c.415 0 .733.246.943.52.255.333.48.48.675.48h.238l-.244-2.855zM4.605 3a.5.5 0 0 0-.498.55l.001.007.29 3.4A.5.5 0 0 1 3.9 7.5h-.782c-.696 0-1.182-.497-1.469-.872a.459.459 0 0 0-.118-.115.112.112 0 0 0-.025-.012L1.5 6.5h-.003a.213.213 0 0 0-.064.039.86.86 0 0 0-.193.27C1.1 7.09 1 7.51 1 8c0 .491.1.912.24 1.19.07.14.14.225.194.271a.213.213 0 0 0 .063.039H1.5l.006-.001a.112.112 0 0 0 .025-.012.459.459 0 0 0 .118-.115c.287-.375.773-.872 1.469-.872H3.9a.5.5 0 0 1 .498.542l-.29 3.408a.5.5 0 0 0 .497.55h1.878c-.048-.166-.195-.352-.463-.557-.274-.21-.52-.528-.52-.943 0-.568.447-.947.862-1.154C6.807 10.123 7.387 10 8 10s1.193.123 1.638.346c.415.207.862.586.862 1.154 0 .415-.246.733-.52.943-.268.205-.415.39-.463.557h1.878a.5.5 0 0 0 .498-.55l-.001-.007-.29-3.4A.5.5 0 0 1 12.1 8.5h.782c.696 0 1.182.497 1.469.872.05.065.091.099.118.115.013.008.021.01.025.012a.02.02 0 0 0 .006.001h.003a.214.214 0 0 0 .064-.039.86.86 0 0 0 .193-.27c.14-.28.24-.7.24-1.191 0-.492-.1-.912-.24-1.19a.86.86 0 0 0-.194-.271.215.215 0 0 0-.063-.039H14.5l-.006.001a.113.113 0 0 0-.025.012.459.459 0 0 0-.118.115c-.287.375-.773.872-1.469.872H12.1a.5.5 0 0 1-.498-.543l.29-3.407a.5.5 0 0 0-.497-.55H9.517c.048.166.195.352.463.557.274.21.52.528.52.943 0 .568-.447.947-.862 1.154C9.193 5.877 8.613 6 8 6s-1.193-.123-1.638-.346C5.947 5.447 5.5 5.068 5.5 4.5c0-.415.246-.733.52-.943.268-.205.415-.39.463-.557H4.605z"/>
+  </symbol>
+  <symbol id="search" viewBox="0 0 16 16">
+    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+  </symbol>
+</svg>
+
+<header class="navbar sticky-top bg-dark flex-md-nowrap p-0 shadow" data-bs-theme="dark">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 text-white" href="#">순익 관리 프로그램</a>
+
+  <ul class="navbar-nav flex-row d-md-none">
+    <li class="nav-item text-nowrap">
+      <button class="nav-link px-3 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSearch" aria-controls="navbarSearch" aria-expanded="false" aria-label="Toggle search">
+        <svg class="bi"><use xlink:href="#search"/></svg>
+      </button>
+    </li>
+    <li class="nav-item text-nowrap">
+      <button class="nav-link px-3 text-white" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <svg class="bi"><use xlink:href="#list"/></svg>
+      </button>
+    </li>
+  </ul>
+
+  <div id="navbarSearch" class="navbar-search w-100 collapse">
+    <input class="form-control w-100 rounded-0 border-0" type="text" placeholder="Search" aria-label="Search">
+  </div>
+</header>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
+      <div class="offcanvas-md offcanvas-end bg-body-tertiary" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="sidebarMenuLabel">Company name</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" data-bs-target="#sidebarMenu" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-md-flex flex-column p-0 pt-lg-3 overflow-y-auto">
+          
+
+          <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
+            <span>MENU</span>
+            <a class="link-secondary" href="#" aria-label="Add a new report">
+              <svg class="bi"><use xlink:href="#plus-circle"/></svg>
+            </a>
+          </h6>
+          <ul class="nav flex-column mb-auto">
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="#">
+                <svg class="bi"><use xlink:href="#house-fill"/></svg>
+                택배 송장 변환
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="./category-management.html">
+                <svg class="bi"><use xlink:href="#file-earmark-text"/></svg>
+                카테고리 관리
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="./expense-management.html">
+                <svg class="bi"><use xlink:href="#file-earmark"/></svg>
+                비용 관리
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2 active" href="./purchase-management.html">
+                <svg class="bi"><use xlink:href="#file-earmark"/></svg>
+                매입 관리
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="./detail-management.html">
+                <svg class="bi"><use xlink:href="#cart"/></svg>
+                정산 상세 조회
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="./report-management.html">
+                <svg class="bi"><use xlink:href="#graph-up"/></svg>
+                정산 리포트
+              </a>
+            </li>
+          </ul>
+
+          <hr class="my-3">
+
+          <ul class="nav flex-column mb-auto">
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="#">
+                <svg class="bi"><use xlink:href="#gear-wide-connected"/></svg>
+                설정
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link d-flex align-items-center gap-2" href="#">
+                <svg class="bi"><use xlink:href="#door-closed"/></svg>
+                로그아웃
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 manage-page">
+      <div class="manage-header">
+        <div>
+          <span class="manage-kicker">Purchase Workspace</span>
+          <h1 class="manage-title">매입 관리</h1>
+          <p class="manage-subtitle">검색, 등록, 엑셀 조회, 상품 매핑까지 한 화면에서 흐름이 끊기지 않도록 다시 정리했습니다.</p>
+        </div>
+      </div>
+
+      <hr class="manage-rule">
+
+      <div class="manage-layout">
+        <section class="manage-card">
+          <div class="manage-card-header">
+            <div>
+              <h2 class="manage-card-title">매입 조회</h2>
+              <p class="manage-card-caption">카테고리와 거래처, 기간 조건을 조합해 필요한 매입 내역만 빠르게 좁혀볼 수 있습니다.</p>
+            </div>
+          </div>
+
+          <form id="purchaseSearchForm">
+            <div class="row g-3">
+              <div class="col-md-2">
+                <label for="searchLargeCategory" class="form-label">대분류</label>
+                <select class="form-select" id="searchLargeCategory">
+                  <option value="">전체</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="searchMediumCategory" class="form-label">중분류</label>
+                <select class="form-select" id="searchMediumCategory">
+                  <option value="">전체</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="searchSmallCategory" class="form-label">소분류</label>
+                <select class="form-select" id="searchSmallCategory">
+                  <option value="">전체</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="searchPurchaseType" class="form-label">매입처</label>
+                <select class="form-select" id="searchPurchaseType">
+                  <option value="">전체</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">날짜</label>
+                <div class="d-flex align-items-center gap-2">
+                  <input type="date" class="form-control" id="searchStartDate">
+                  <span class="text-body-secondary">~</span>
+                  <input type="date" class="form-control" id="searchEndDate">
+                </div>
+              </div>
+            </div>
+
+            <div class="manage-actions">
+              <button type="button" class="btn manage-btn manage-btn-primary" id="btnSearch">조회</button>
+              <button type="button" class="btn manage-btn manage-btn-soft" id="btnSearchAll">전체 조회</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="manage-card manage-card--table">
+          <div class="manage-card-header">
+            <div>
+              <h2 class="manage-card-title">매입 목록</h2>
+              <p class="manage-card-caption">검색 조건에 맞는 매입 데이터를 표 형태로 확인할 수 있습니다.</p>
+            </div>
+            <span id="purchasePageInfo" class="manage-badge">총 0건</span>
+          </div>
+
+          <div class="manage-table-wrap">
+            <table class="table manage-table align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>대분류</th>
+                  <th>중분류</th>
+                  <th>소분류</th>
+                  <th>매입처</th>
+                  <th>제품</th>
+                  <th class="text-end">단가</th>
+                  <th class="text-end">수량</th>
+                  <th class="text-end">총금액</th>
+                </tr>
+              </thead>
+              <tbody id="purchaseTableBody">
+                <tr>
+                  <td>대분류 예시</td>
+                  <td>중분류 예시</td>
+                  <td>소분류 예시</td>
+                  <td>거래처B</td>
+                  <td>제품명</td>
+                  <td class="text-end">10,000</td>
+                  <td class="text-end">3</td>
+                  <td class="text-end">30,000</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="manage-table-footer">
+            <small>페이지 이동</small>
+            <nav aria-label="매입 목록 페이지 이동">
+              <ul id="purchasePagination" class="pagination pagination-sm mb-0"></ul>
+            </nav>
+          </div>
+        </section>
+
+        <section class="manage-card">
+          <div class="manage-card-header">
+            <div>
+              <h2 class="manage-card-title">매입 저장 및 수정</h2>
+              <p class="manage-card-caption">기본 매입 정보를 입력하고 선택한 행의 수정 또는 삭제까지 바로 이어서 처리할 수 있습니다.</p>
+            </div>
+          </div>
+
+          <form id="purchaseForm">
+            <input type="hidden" id="purchaseId">
+
+            <div class="row g-3">
+              <div class="col-md-2">
+                <label for="saveLargeCategory" class="form-label">대분류</label>
+                <select class="form-select" id="saveLargeCategory" required>
+                  <option value="">선택</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="saveMediumCategory" class="form-label">중분류</label>
+                <select class="form-select" id="saveMediumCategory" required>
+                  <option value="">선택</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="saveSmallCategory" class="form-label">소분류</label>
+                <select class="form-select" id="saveSmallCategory" required>
+                  <option value="">선택</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="savePurchaseType" class="form-label">제품명</label>
+                <select class="form-select" id="savePurchaseType" required>
+                  <option value="">선택</option>
+                </select>
+              </div>
+              <div class="col-md-2">
+                <label for="savePurchaseDate" class="form-label">발생일</label>
+                <input type="date" class="form-control" id="savePurchaseDate" required>
+              </div>
+              <div class="col-md-2">
+                <label for="savePurchaseTime" class="form-label">발생시간</label>
+                <input type="time" step="1" class="form-control" id="savePurchaseTime">
+              </div>
+              <div class="col-md-4">
+                <label for="saveSupplierName" class="form-label">매입처</label>
+                <input type="text" class="form-control" id="saveSupplierName" maxlength="500" required>
+              </div>
+              <div class="col-md-2">
+                <label for="saveUnitCost" class="form-label">단가</label>
+                <input type="number" class="form-control" id="saveUnitCost" min="0" required>
+              </div>
+              <div class="col-md-2">
+                <label for="saveQuantity" class="form-label">수량</label>
+                <input type="number" class="form-control" id="saveQuantity" min="0" required>
+              </div>
+              <div class="col-md-2">
+                <label for="saveTotalCost" class="form-label">총금액</label>
+                <input type="number" class="form-control" id="saveTotalCost" readonly>
+              </div>
+            </div>
+
+            <div class="manage-actions">
+              <button type="button" class="btn manage-btn manage-btn-primary" id="btnSave">입력</button>
+              <button type="button" class="btn manage-btn manage-btn-neutral" id="btnUpdate">수정</button>
+              <button type="button" class="btn manage-btn manage-btn-danger" id="btnDelete">삭제</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="manage-card manage-card--table">
+          <div class="manage-card-header">
+            <div>
+              <h2 class="manage-card-title">Excel 매입 조회</h2>
+              <p class="manage-card-caption">파일 업로드 후 기간과 거래처 조건으로 엑셀 매입 내역을 분리해서 볼 수 있습니다.</p>
+            </div>
+            <span id="autoPageInfo" class="manage-badge">총 0건</span>
+          </div>
+
+          <div style="padding: 0 1.5rem 1.1rem;">
+            <form id="purchaseAutoForm">
+              <div class="row g-3">
+                <div class="col-md-2">
+                  <label for="autoStartDate" class="form-label">시작일</label>
+                  <input type="date" class="form-control" id="autoStartDate">
+                </div>
+                <div class="col-md-2">
+                  <label for="autoEndDate" class="form-label">종료일</label>
+                  <input type="date" class="form-control" id="autoEndDate">
+                </div>
+                <div class="col-md-4">
+                  <label for="autoSupplierName" class="form-label">매입처</label>
+                  <input type="text" class="form-control" id="autoSupplierName" placeholder="매입처 입력">
+                </div>
+                <div class="col-md-2">
+                  <label for="autoUploadFileName" class="form-label">파일 업로드</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="autoUploadFileName" placeholder="excel file upload" readonly>
+                    <input type="file" class="d-none" id="autoUploadFile" accept=".xlsx,.xls,.csv">
+                    <button type="button" class="btn manage-btn manage-btn-neutral" id="btnAutoUpload">upload</button>
+                  </div>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                  <button type="button" class="btn manage-btn manage-btn-primary w-100" id="btnAutoSearch">조회</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="manage-table-wrap">
+            <table class="table manage-table align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>날짜</th>
+                  <th>매입처</th>
+                  <th>금액</th>
+                </tr>
+              </thead>
+              <tbody id="autoResultBody">
+                <tr>
+                  <td>날짜 예시</td>
+                  <td>매입처 예시</td>
+                  <td>금액 예시</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="manage-table-footer">
+            <small>페이지 이동</small>
+            <nav aria-label="Excel purchase pagination">
+              <ul id="autoPagination" class="pagination pagination-sm mb-0"></ul>
+            </nav>
+          </div>
+        </section>
+
+        <section class="manage-card manage-card--table">
+          <div class="manage-card-header">
+            <div>
+              <h2 class="manage-card-title">제품 매핑 조회</h2>
+              <p class="manage-card-caption">발생일과 키워드를 기준으로 매핑 대상을 확인하고 연결 상태를 점검할 수 있습니다.</p>
+            </div>
+            <span id="mappingPageInfo" class="manage-badge">총 0건</span>
+          </div>
+
+          <div style="padding: 0 1.5rem 1.1rem;">
+            <form id="productMappingSearchForm">
+              <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                  <label for="mappingDate" class="form-label">발생일</label>
+                  <input type="date" class="form-control" id="mappingDate">
+                </div>
+                <div class="col-md-3">
+                  <label for="mappingKeyword" class="form-label">키워드</label>
+                  <input type="text" class="form-control" id="mappingKeyword" placeholder="키워드 입력">
+                </div>
+                <div class="col-md-2">
+                  <button type="button" class="btn manage-btn manage-btn-primary w-100" id="btnMappingSearch">검색</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="manage-table-wrap">
+            <table class="table manage-table align-middle mb-0">
+              <thead>
+                <tr>
+                  <th>대분류</th>
+                  <th>중분류</th>
+                  <th>소분류</th>
+                  <th>제품명</th>
+                  <th>시작일</th>
+                  <th>종료일</th>
+                  <th>활성 여부</th>
+                </tr>
+              </thead>
+              <tbody id="mappingTableBody">
+                <tr>
+                  <td colspan="7">조회 결과가 없습니다.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="manage-table-footer">
+            <small>페이지 이동</small>
+            <nav aria-label="Product mapping pagination">
+              <ul id="mappingPagination" class="pagination pagination-sm mb-0"></ul>
+            </nav>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+<script src="../js/bootstrap.bundle.min.js"></script>
+<script>
+
+  (function () {
+  const API = {
+    searchPage: "/renewal/purchase/page",
+    searchAllPage: "/renewal/purchase/page/all",
+    mappingSearchPage: "/renewal/purchase/product-mapping",
+    save: "/renewal/purchase",
+    update: (id) => `/renewal/purchase/${id}`,
+    remove: (id) => `/renewal/purchase/${id}`,
+    autoSearch: "/renewal/purchase/excel-search",
+    autoSearchPage: "/renewal/purchase/excel-search"
+  };
+
+  const OPTION_API = {
+    large: "/renewal/purchase/options/large",
+    medium: "/renewal/purchase/options/medium",
+    small: "/renewal/purchase/options/small",
+    supplier: "/renewal/purchase/options/supplier",
+    products: "/renewal/purchase/options/products"
+  };
+
+  const DEFAULTS = {
+    all: "전체",
+    save: "선택"
+  };
+
+  const PAGE_WINDOW_SIZE = 10;
+
+  const state = {
+    selectedId: null,
+    selectedRow: null,
+    mode: "search",
+    currentPage: 1,
+    size: 10,
+    totalPages: 0,
+    totalCount: 0,
+    rows: [],
+    autoCurrentPage: 1,
+    autoSize: 10,
+    autoTotalPages: 0,
+    autoTotalCount: 0,
+    autoRows: [],
+    mappingCurrentPage: 1,
+    mappingSize: 10,
+    mappingTotalPages: 0,
+    mappingTotalCount: 0,
+    mappingRows: []
+  };
+
+  const el = {
+    searchLarge: document.getElementById("searchLargeCategory"),
+    searchMedium: document.getElementById("searchMediumCategory"),
+    searchSmall: document.getElementById("searchSmallCategory"),
+    searchType: document.getElementById("searchPurchaseType"),
+    searchStartDate: document.getElementById("searchStartDate"),
+    searchEndDate: document.getElementById("searchEndDate"),
+    btnSearch: document.getElementById("btnSearch"),
+    btnSearchAll: document.getElementById("btnSearchAll"),
+    tableBody: document.getElementById("purchaseTableBody"),
+    purchaseId: document.getElementById("purchaseId"),
+    saveLarge: document.getElementById("saveLargeCategory"),
+    saveMedium: document.getElementById("saveMediumCategory"),
+    saveSmall: document.getElementById("saveSmallCategory"),
+    saveType: document.getElementById("savePurchaseType"),
+    saveDate: document.getElementById("savePurchaseDate"),
+    saveTime: document.getElementById("savePurchaseTime"),
+    saveSupplier: document.getElementById("saveSupplierName"),
+    saveUnitCost: document.getElementById("saveUnitCost"),
+    saveQty: document.getElementById("saveQuantity"),
+    saveTotal: document.getElementById("saveTotalCost"),
+    btnSave: document.getElementById("btnSave"),
+    btnUpdate: document.getElementById("btnUpdate"),
+    btnDelete: document.getElementById("btnDelete"),
+    autoStartDate: document.getElementById("autoStartDate"),
+    autoEndDate: document.getElementById("autoEndDate"),
+    autoSupplier: document.getElementById("autoSupplierName"),
+    btnAutoSearch: document.getElementById("btnAutoSearch"),
+    autoUploadFileName: document.getElementById("autoUploadFileName"),
+    autoUploadFile: document.getElementById("autoUploadFile"),
+    btnAutoUpload: document.getElementById("btnAutoUpload"),
+    autoResultBody: document.getElementById("autoResultBody"),
+    autoPagination: document.getElementById("autoPagination"),
+    autoPageInfo: document.getElementById("autoPageInfo"),
+    mappingForm: document.getElementById("productMappingSearchForm"),
+    mappingDate: document.getElementById("mappingDate"),
+    mappingKeyword: document.getElementById("mappingKeyword"),
+    btnMappingSearch: document.getElementById("btnMappingSearch"),
+    mappingTableBody: document.getElementById("mappingTableBody"),
+    mappingPagination: document.getElementById("mappingPagination"),
+    mappingPageInfo: document.getElementById("mappingPageInfo"),
+    pagination: document.getElementById("purchasePagination"),
+    pageInfo: document.getElementById("purchasePageInfo")
+  };
+
+  const normalize = (value) => String(value ?? "").trim();
+  const toNumber = (value) => Number(value || 0);
+  const won = (value) => toNumber(value).toLocaleString();
+
+  function recalcTotal() {
+    el.saveTotal.value = toNumber(el.saveUnitCost.value) * toNumber(el.saveQty.value);
+  }
+
+  function buildQuery(params) {
+    const q = new URLSearchParams();
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== null && value !== undefined && normalize(value) !== "") {
+        q.append(key, value);
+      }
+    });
+    return q.toString();
+  }
+
+  async function requestJson(url, options = {}) {
+    const hasBody = Boolean(options.body);
+    const useJsonHeader = hasBody && !(options.body instanceof FormData);
+
+    const res = await fetch(url, {
+      headers: useJsonHeader ? { "Content-Type": "application/json" } : undefined,
+      ...options
+    });
+
+    if (!res.ok) throw new Error(`요청 실패 (${res.status})`);
+    if (res.status === 204) return null;
+
+    const contentType = res.headers.get("content-type") || "";
+    if (contentType.includes("application/json")) return res.json();
+    return null;
+  }
+
+  function extractOptionValue(item) {
+    if (item == null) return "";
+    if (typeof item === "string") return normalize(item);
+    if (typeof item === "object") return normalize(item.value ?? item.name ?? "");
+    return "";
+  }
+
+  function resetSelect(selectEl, placeholder) {
+    selectEl.innerHTML = "";
+    const option = document.createElement("option");
+    option.value = placeholder;
+    option.textContent = placeholder;
+    selectEl.appendChild(option);
+    selectEl.value = placeholder;
+  }
+
+  function setSelectOptions(selectEl, rows, placeholder) {
+    resetSelect(selectEl, placeholder);
+    const values = Array.from(new Set((rows || []).map(extractOptionValue).filter(Boolean)));
+    values.forEach((value) => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      selectEl.appendChild(option);
+    });
+  }
+
+  function setSelectValueIfExists(selectEl, value, fallback) {
+    const v = normalize(value);
+    if (!v) {
+      selectEl.value = fallback;
+      return;
+    }
+    const exists = Array.from(selectEl.options).some((opt) => opt.value === v);
+    selectEl.value = exists ? v : fallback;
+  }
+
+  function toTimeInputValue(value) {
+    const raw = normalize(value);
+    if (!raw) return "";
+    if (/^\d{2}:\d{2}:\d{2}$/.test(raw)) return raw;
+    return raw.length >= 5 ? raw.slice(0, 5) : raw;
+  }
+
+  function isSavePlaceholder(value) {
+    const v = normalize(value);
+    return !v || v === DEFAULTS.save;
+  }
+
+  function ensureCommandSuccess(response, fallbackMessage) {
+    if (!response) throw new Error(fallbackMessage);
+    if (response.success === false) throw new Error(response.message || fallbackMessage);
+    return response;
+  }
+
+  async function loadSearchLargeOptions() {
+    const rows = await requestJson(OPTION_API.large);
+    setSelectOptions(el.searchLarge, rows, DEFAULTS.all);
+    el.searchLarge.value = DEFAULTS.all;
+  }
+
+  async function loadSearchMediumOptions() {
+    const largeCategory = normalize(el.searchLarge.value) || DEFAULTS.all;
+
+    resetSelect(el.searchMedium, DEFAULTS.all);
+    resetSelect(el.searchSmall, DEFAULTS.all);
+    resetSelect(el.searchType, DEFAULTS.all);
+
+    if (largeCategory === DEFAULTS.all) return;
+
+    const query = buildQuery({ largeCategory });
+    const rows = await requestJson(`${OPTION_API.medium}?${query}`);
+    setSelectOptions(el.searchMedium, rows, DEFAULTS.all);
+    el.searchMedium.value = DEFAULTS.all;
+  }
+
+  async function loadSearchSmallOptions() {
+    const largeCategory = normalize(el.searchLarge.value) || DEFAULTS.all;
+    const mediumCategory = normalize(el.searchMedium.value) || DEFAULTS.all;
+
+    resetSelect(el.searchSmall, DEFAULTS.all);
+    resetSelect(el.searchType, DEFAULTS.all);
+
+    if (largeCategory === DEFAULTS.all || mediumCategory === DEFAULTS.all) return;
+
+    const query = buildQuery({ largeCategory, mediumCategory });
+    const rows = await requestJson(`${OPTION_API.small}?${query}`);
+    setSelectOptions(el.searchSmall, rows, DEFAULTS.all);
+    el.searchSmall.value = DEFAULTS.all;
+  }
+
+  async function loadSearchSupplierOptions() {
+    const largeCategory = normalize(el.searchLarge.value) || DEFAULTS.all;
+    const mediumCategory = normalize(el.searchMedium.value) || DEFAULTS.all;
+    const smallCategory = normalize(el.searchSmall.value) || DEFAULTS.all;
+
+    resetSelect(el.searchType, DEFAULTS.all);
+
+    if (
+      largeCategory === DEFAULTS.all ||
+      mediumCategory === DEFAULTS.all ||
+      smallCategory === DEFAULTS.all
+    ) {
+      return;
+    }
+
+    const query = buildQuery({ largeCategory, mediumCategory, smallCategory });
+    const rows = await requestJson(`${OPTION_API.supplier}?${query}`);
+    setSelectOptions(el.searchType, rows, DEFAULTS.all);
+    el.searchType.value = DEFAULTS.all;
+  }
+
+  async function loadSaveLargeOptions() {
+    const rows = await requestJson(OPTION_API.large);
+    setSelectOptions(el.saveLarge, rows, DEFAULTS.save);
+    el.saveLarge.value = DEFAULTS.save;
+  }
+
+  async function loadSaveMediumOptions() {
+    const largeCategory = normalize(el.saveLarge.value);
+
+    resetSelect(el.saveMedium, DEFAULTS.save);
+    resetSelect(el.saveSmall, DEFAULTS.save);
+    resetSelect(el.saveType, DEFAULTS.save);
+
+    if (isSavePlaceholder(largeCategory)) return;
+
+    const query = buildQuery({ largeCategory });
+    const rows = await requestJson(`${OPTION_API.medium}?${query}`);
+    setSelectOptions(el.saveMedium, rows, DEFAULTS.save);
+    el.saveMedium.value = DEFAULTS.save;
+  }
+
+  async function loadSaveSmallOptions() {
+    const largeCategory = normalize(el.saveLarge.value);
+    const mediumCategory = normalize(el.saveMedium.value);
+
+    resetSelect(el.saveSmall, DEFAULTS.save);
+    resetSelect(el.saveType, DEFAULTS.save);
+
+    if (isSavePlaceholder(largeCategory) || isSavePlaceholder(mediumCategory)) return;
+
+    const query = buildQuery({ largeCategory, mediumCategory });
+    const rows = await requestJson(`${OPTION_API.small}?${query}`);
+    setSelectOptions(el.saveSmall, rows, DEFAULTS.save);
+    el.saveSmall.value = DEFAULTS.save;
+  }
+
+  async function loadSaveProductOptions() {
+    const largeCategory = normalize(el.saveLarge.value);
+    const mediumCategory = normalize(el.saveMedium.value);
+    const smallCategory = normalize(el.saveSmall.value);
+
+    resetSelect(el.saveType, DEFAULTS.save);
+
+    if (
+      isSavePlaceholder(largeCategory) ||
+      isSavePlaceholder(mediumCategory) ||
+      isSavePlaceholder(smallCategory)
+    ) {
+      return;
+    }
+
+    const query = buildQuery({ largeCategory, mediumCategory, smallCategory });
+    const rows = await requestJson(`${OPTION_API.products}?${query}`);
+    setSelectOptions(el.saveType, rows, DEFAULTS.save);
+    el.saveType.value = DEFAULTS.save;
+  }
+
+  async function applyCategoryToSaveForm(row) {
+    const largeCategory = normalize(row.largeCategory ?? row.large_category);
+    const mediumCategory = normalize(row.mediumCategory ?? row.medium_category);
+    const smallCategory = normalize(row.smallCategory ?? row.small_category);
+    const productName = normalize(row.productName ?? row.product_name);
+
+    await loadSaveLargeOptions();
+    setSelectValueIfExists(el.saveLarge, largeCategory, DEFAULTS.save);
+
+    await loadSaveMediumOptions();
+    setSelectValueIfExists(el.saveMedium, mediumCategory, DEFAULTS.save);
+
+    await loadSaveSmallOptions();
+    setSelectValueIfExists(el.saveSmall, smallCategory, DEFAULTS.save);
+
+    await loadSaveProductOptions();
+    setSelectValueIfExists(el.saveType, productName, DEFAULTS.save);
+  }
+
+  async function fillForm(row) {
+    state.selectedId = row.id ?? null;
+    state.selectedRow = row ?? null;
+    el.purchaseId.value = row.id ?? "";
+
+    await applyCategoryToSaveForm(row);
+    el.saveDate.value = normalize(row.purchaseDate ?? row.purchase_date);
+    el.saveTime.value = toTimeInputValue(row.purchaseTime ?? row.purchase_time);
+    el.saveSupplier.value = normalize(row.supplierName ?? row.supplier_name ?? row.description);
+    el.saveUnitCost.value = toNumber(row.unitCost ?? row.unit_cost);
+    el.saveQty.value = toNumber(row.quantity);
+    el.saveTotal.value = toNumber(row.totalCost ?? row.total_cost);
+  }
+
+  function renderRows(rows) {
+    el.tableBody.innerHTML = "";
+    if (!rows.length) {
+      el.tableBody.innerHTML = '<tr><td colspan="8">조회 결과가 없습니다.</td></tr>';
+      return;
+    }
+
+    rows.forEach((row) => {
+      const tr = document.createElement("tr");
+      tr.style.cursor = "pointer";
+      tr.innerHTML = `
+        <td>${row.largeCategory ?? row.large_category ?? "-"}</td>
+        <td>${row.mediumCategory ?? row.medium_category ?? "-"}</td>
+        <td>${row.smallCategory ?? row.small_category ?? "-"}</td>
+        <td>${row.supplierName ?? row.supplier_name ?? "-"}</td>
+        <td>${row.productName ?? row.product_name ?? "-"}</td>
+        <td class="text-end">${won(row.unitCost ?? row.unit_cost)}</td>
+        <td class="text-end">${won(row.quantity)}</td>
+        <td class="text-end">${won(row.totalCost ?? row.total_cost)}</td>
+      `;
+      tr.addEventListener("click", async () => {
+        try {
+          await fillForm(row);
+        } catch (error) {
+          alert(error.message || "선택 항목 반영 중 오류가 발생했습니다.");
+        }
+      });
+      el.tableBody.appendChild(tr);
+    });
+  }
+
+  function getPayload() {
+    const largeCategory = normalize(el.saveLarge.value);
+    const mediumCategory = normalize(el.saveMedium.value);
+    const smallCategory = normalize(el.saveSmall.value);
+    const productName = normalize(el.saveType.value);
+
+    let purchaseTime = normalize(el.saveTime.value) || null;
+    const selectedRawTime = normalize(state.selectedRow?.purchaseTime ?? state.selectedRow?.purchase_time);
+    if (
+      purchaseTime &&
+      /^\d{2}:\d{2}$/.test(purchaseTime) &&
+      /^\d{2}:\d{2}:\d{2}$/.test(selectedRawTime) &&
+      selectedRawTime.startsWith(`${purchaseTime}:`)
+    ) {
+      // 브라우저가 초 단위를 표시/입력하지 못하는 경우, 목록에서 고른 원본 시간을 유지한다.
+      purchaseTime = selectedRawTime;
+    }
+
+    return {
+      large_category: isSavePlaceholder(largeCategory) ? null : largeCategory,
+      medium_category: isSavePlaceholder(mediumCategory) ? null : mediumCategory,
+      small_category: isSavePlaceholder(smallCategory) ? null : smallCategory,
+      product_name: isSavePlaceholder(productName) ? null : productName,
+      purchase_date: normalize(el.saveDate.value),
+      purchase_time: purchaseTime,
+      supplier_name: normalize(el.saveSupplier.value),
+      unit_cost: toNumber(el.saveUnitCost.value),
+      quantity: toNumber(el.saveQty.value),
+      total_cost: toNumber(el.saveTotal.value)
+    };
+  }
+
+  function getSearchParams() {
+    return {
+      largeCategory: normalize(el.searchLarge.value) || DEFAULTS.all,
+      mediumCategory: normalize(el.searchMedium.value) || DEFAULTS.all,
+      smallCategory: normalize(el.searchSmall.value) || DEFAULTS.all,
+      supplierName: normalize(el.searchType.value) || DEFAULTS.all,
+      startDate: normalize(el.searchStartDate.value),
+      endDate: normalize(el.searchEndDate.value)
+    };
+  }
+
+  function renderPageInfo() {
+    if (!el.pageInfo) return;
+    if (state.totalCount === 0) {
+      el.pageInfo.textContent = "총 0건";
+      return;
+    }
+    el.pageInfo.textContent = `총 ${state.totalCount}건 · ${state.currentPage}/${state.totalPages} 페이지`;
+  }
+
+  function createPageItem({ label, page, disabled = false, active = false }) {
+    const li = document.createElement("li");
+    li.className = `page-item${disabled ? " disabled" : ""}${active ? " active" : ""}`;
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "page-link";
+    button.textContent = label;
+
+    if (!disabled && !active) {
+      button.addEventListener("click", async () => {
+        try {
+          if (state.mode === "all") {
+            await fetchAllPage(page);
+          } else {
+            await fetchSearchPage(page);
+          }
+        } catch (error) {
+          alert(error.message || "페이지 조회 중 오류가 발생했습니다.");
+        }
+      });
+    }
+
+    li.appendChild(button);
+    return li;
+  }
+
+  function renderPagination() {
+    if (!el.pagination) return;
+    el.pagination.innerHTML = "";
+    if (!state.totalPages || state.totalPages < 1) return;
+
+    const currentBlock = Math.floor((state.currentPage - 1) / PAGE_WINDOW_SIZE);
+    const startPage = currentBlock * PAGE_WINDOW_SIZE + 1;
+    const endPage = Math.min(startPage + PAGE_WINDOW_SIZE - 1, state.totalPages);
+
+    el.pagination.appendChild(
+      createPageItem({
+        label: "<",
+        page: Math.max(1, startPage - 1),
+        disabled: startPage <= 1
+      })
+    );
+
+    for (let page = startPage; page <= endPage; page += 1) {
+      el.pagination.appendChild(
+        createPageItem({
+          label: String(page),
+          page,
+          active: page === state.currentPage
+        })
+      );
+    }
+
+    el.pagination.appendChild(
+      createPageItem({
+        label: ">",
+        page: Math.min(state.totalPages, endPage + 1),
+        disabled: endPage >= state.totalPages
+      })
+    );
+  }
+
+  function renderPagedResult(response, fallbackPage) {
+    const items = Array.isArray(response?.items) ? response.items : [];
+    const totalCount = Number(response?.totalCount ?? response?.total_count ?? 0);
+    const totalPages = Number(response?.totalPages ?? response?.total_pages ?? 0);
+    const currentPage = Number(response?.page ?? fallbackPage);
+
+    state.rows = items;
+    state.totalCount = Number.isFinite(totalCount) ? totalCount : 0;
+    state.totalPages = Number.isFinite(totalPages) ? totalPages : 0;
+    state.currentPage = Number.isFinite(currentPage) ? currentPage : fallbackPage;
+
+    renderRows(state.rows);
+    renderPageInfo();
+    renderPagination();
+  }
+
+  async function fetchSearchPage(page = 1) {
+    const filters = getSearchParams();
+    const query = buildQuery({
+      ...filters,
+      page,
+      size: state.size
+    });
+
+    const response = await requestJson(`${API.searchPage}?${query}`);
+    renderPagedResult(response, page);
+  }
+
+  async function fetchAllPage(page = 1) {
+    const query = buildQuery({ page, size: state.size });
+    const url = query ? `${API.searchAllPage}?${query}` : API.searchAllPage;
+    const response = await requestJson(url);
+    renderPagedResult(response, page);
+  }
+
+  async function search() {
+    state.mode = "search";
+    await fetchSearchPage(1);
+  }
+
+  async function searchAll() {
+    state.mode = "all";
+    el.searchStartDate.value = "";
+    el.searchEndDate.value = "";
+    el.searchLarge.value = DEFAULTS.all;
+    await loadSearchMediumOptions();
+    await fetchAllPage(1);
+  }
+
+  async function refreshCurrentPage() {
+    if (state.mode === "all") {
+      await fetchAllPage(state.currentPage || 1);
+      return;
+    }
+    await fetchSearchPage(state.currentPage || 1);
+  }
+
+  async function save() {
+    try {
+      const response = await requestJson(API.save, {
+        method: "POST",
+        body: JSON.stringify(getPayload())
+      });
+      const result = ensureCommandSuccess(response, "저장에 실패했습니다.");
+      await refreshCurrentPage();
+      alert(result.message || "저장 완료");
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  async function update() {
+    try {
+      if (!state.selectedId) {
+        alert("수정할 항목을 목록에서 먼저 선택해 주세요.");
+        return;
+      }
+
+      const response = await requestJson(API.update(state.selectedId), {
+        method: "PUT",
+        body: JSON.stringify(getPayload())
+      });
+      const result = ensureCommandSuccess(response, "수정에 실패했습니다.");
+      await refreshCurrentPage();
+      alert(result.message || "수정 완료");
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  async function removePurchase() {
+    try {
+      if (!state.selectedId) {
+        alert("삭제할 항목을 목록에서 먼저 선택해 주세요.");
+        return;
+      }
+
+      const response = await requestJson(API.remove(state.selectedId), { method: "DELETE" });
+      const result = ensureCommandSuccess(response, "삭제에 실패했습니다.");
+      state.selectedId = null;
+      state.selectedRow = null;
+      el.purchaseId.value = "";
+      await refreshCurrentPage();
+      alert(result.message || "삭제 완료");
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  async function autoSearchLegacy() {
+    try {
+      if (!el.autoUploadFile.files.length) {
+        alert("계좌내역 파일을 먼저 선택해 주세요.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", el.autoUploadFile.files[0]);
+      formData.append("startDate", el.autoStartDate.value);
+      formData.append("endDate", el.autoEndDate.value);
+      formData.append("supplierName", el.autoSupplier.value.trim());
+
+      const res = await fetch(API.autoSearch, { method: "POST", body: formData });
+      if (!res.ok) throw new Error(`조회 실패 (${res.status})`);
+
+      const data = await res.json();
+      const rows = Array.isArray(data) ? data : (data.items ?? []);
+      el.autoResultBody.innerHTML = "";
+
+      if (!rows.length) {
+        el.autoResultBody.innerHTML = '<tr><td colspan="3">조회 결과가 없습니다.</td></tr>';
+        return;
+      }
+
+      rows.forEach((row) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row.purchaseDate ?? row.purchase_date ?? row.date ?? "-"}</td>
+          <td>${row.supplierName ?? row.supplier_name ?? row.vendorName ?? "-"}</td>
+          <td class="text-end">${won(row.totalCost ?? row.total_cost ?? row.amount ?? 0)}</td>
+        `;
+        el.autoResultBody.appendChild(tr);
+      });
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  function renderAutoRowsPaged(rows) {
+    if (!el.autoResultBody) return;
+    el.autoResultBody.innerHTML = "";
+
+    if (!rows.length) {
+      el.autoResultBody.innerHTML = '<tr><td colspan="3">조회 결과가 없습니다.</td></tr>';
+      return;
+    }
+
+    rows.forEach((row) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${row.purchaseDate ?? row.purchase_date ?? row.date ?? "-"}</td>
+        <td>${row.supplierName ?? row.supplier_name ?? row.vendorName ?? "-"}</td>
+        <td class="text-end">${won(row.totalCost ?? row.total_cost ?? row.amount ?? 0)}</td>
+      `;
+      el.autoResultBody.appendChild(tr);
+    });
+  }
+
+  function renderAutoPageInfo() {
+    if (!el.autoPageInfo) return;
+    if (state.autoTotalCount === 0) {
+      el.autoPageInfo.textContent = "총 0건";
+      return;
+    }
+    el.autoPageInfo.textContent = `총 ${state.autoTotalCount}건 · ${state.autoCurrentPage}/${state.autoTotalPages} 페이지`;
+  }
+
+  function createAutoPageItem({ label, page, disabled = false, active = false }) {
+    const li = document.createElement("li");
+    li.className = `page-item${disabled ? " disabled" : ""}${active ? " active" : ""}`;
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "page-link";
+    button.textContent = label;
+
+    if (!disabled && !active) {
+      button.addEventListener("click", async () => {
+        try {
+          await fetchAutoPage(page);
+        } catch (error) {
+          alert(error.message || "페이지 조회 중 오류가 발생했습니다.");
+        }
+      });
+    }
+
+    li.appendChild(button);
+    return li;
+  }
+
+  function renderAutoPagination() {
+    if (!el.autoPagination) return;
+    el.autoPagination.innerHTML = "";
+    if (!state.autoTotalPages || state.autoTotalPages < 1) return;
+
+    const currentBlock = Math.floor((state.autoCurrentPage - 1) / PAGE_WINDOW_SIZE);
+    const startPage = currentBlock * PAGE_WINDOW_SIZE + 1;
+    const endPage = Math.min(startPage + PAGE_WINDOW_SIZE - 1, state.autoTotalPages);
+
+    el.autoPagination.appendChild(
+      createAutoPageItem({
+        label: "<",
+        page: Math.max(1, startPage - 1),
+        disabled: startPage <= 1
+      })
+    );
+
+    for (let page = startPage; page <= endPage; page += 1) {
+      el.autoPagination.appendChild(
+        createAutoPageItem({
+          label: String(page),
+          page,
+          active: page === state.autoCurrentPage
+        })
+      );
+    }
+
+    el.autoPagination.appendChild(
+      createAutoPageItem({
+        label: ">",
+        page: Math.min(state.autoTotalPages, endPage + 1),
+        disabled: endPage >= state.autoTotalPages
+      })
+    );
+  }
+
+  function renderAutoPagedResult(response, fallbackPage) {
+    let items = [];
+    let totalCount = 0;
+    let totalPages = 0;
+    let currentPage = fallbackPage;
+
+    if (Array.isArray(response)) {
+      totalCount = response.length;
+      totalPages = Math.ceil(totalCount / state.autoSize);
+      currentPage = Math.max(1, Math.min(fallbackPage, Math.max(1, totalPages)));
+      const start = (currentPage - 1) * state.autoSize;
+      const end = start + state.autoSize;
+      items = response.slice(start, end);
+    } else {
+      items = Array.isArray(response?.items) ? response.items : [];
+      totalCount = Number(response?.totalCount ?? response?.total_count ?? items.length);
+      totalPages = Number(response?.totalPages ?? response?.total_pages ?? Math.ceil(totalCount / state.autoSize));
+      currentPage = Number(response?.page ?? fallbackPage);
+    }
+
+    state.autoRows = items;
+    state.autoTotalCount = Number.isFinite(totalCount) ? totalCount : 0;
+    state.autoTotalPages = Number.isFinite(totalPages) ? totalPages : 0;
+    state.autoCurrentPage = Number.isFinite(currentPage) ? currentPage : fallbackPage;
+
+    renderAutoRowsPaged(state.autoRows);
+    renderAutoPageInfo();
+    renderAutoPagination();
+  }
+
+  async function fetchAutoPage(page = 1) {
+    if (!el.autoUploadFile.files.length) {
+      alert("계좌내역 파일을 먼저 선택해 주세요.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", el.autoUploadFile.files[0]);
+    formData.append("startDate", el.autoStartDate.value);
+    formData.append("endDate", el.autoEndDate.value);
+    formData.append("supplierName", el.autoSupplier.value.trim());
+    formData.append("page", String(page));
+    formData.append("size", String(state.autoSize));
+
+    let response;
+    try {
+      response = await requestJson(API.autoSearchPage, { method: "POST", body: formData });
+    } catch (error) {
+      if (String(error.message || "").includes("(404)")) {
+        response = await requestJson(API.autoSearch, { method: "POST", body: formData });
+      } else {
+        throw error;
+      }
+    }
+
+    renderAutoPagedResult(response, page);
+  }
+
+  async function autoSearch() {
+    try {
+      await fetchAutoPage(1);
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  function renderMappingRows(rows) {
+    if (!el.mappingTableBody) return;
+    el.mappingTableBody.innerHTML = "";
+
+    if (!rows.length) {
+      el.mappingTableBody.innerHTML = '<tr><td colspan="7">조회 결과가 없습니다.</td></tr>';
+      return;
+    }
+
+    rows.forEach((row) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${row.largeCategory ?? row.large_category ?? "-"}</td>
+        <td>${row.mediumCategory ?? row.medium_category ?? "-"}</td>
+        <td>${row.smallCategory ?? row.small_category ?? "-"}</td>
+        <td>${row.productName ?? row.product_name ?? "-"}</td>
+        <td>${row.startDate ?? row.start_date ?? "-"}</td>
+        <td>${row.endDate ?? row.end_date ?? "-"}</td>
+        <td>${row.activeLabel ?? row.active_label ?? "-"}</td>
+      `;
+      el.mappingTableBody.appendChild(tr);
+    });
+  }
+
+  function renderMappingPageInfo() {
+    if (!el.mappingPageInfo) return;
+    if (state.mappingTotalCount === 0) {
+      el.mappingPageInfo.textContent = "총 0건";
+      return;
+    }
+    el.mappingPageInfo.textContent =
+      `총 ${state.mappingTotalCount}건 · ${state.mappingCurrentPage}/${state.mappingTotalPages} 페이지`;
+  }
+
+  function createMappingPageItem({ label, page, disabled = false, active = false }) {
+    const li = document.createElement("li");
+    li.className = `page-item${disabled ? " disabled" : ""}${active ? " active" : ""}`;
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "page-link";
+    button.textContent = label;
+
+    if (!disabled && !active) {
+      button.addEventListener("click", async () => {
+        try {
+          await fetchMappingPage(page);
+        } catch (error) {
+          alert(error.message || "페이지 조회 중 오류가 발생했습니다.");
+        }
+      });
+    }
+
+    li.appendChild(button);
+    return li;
+  }
+
+  function renderMappingPagination() {
+    if (!el.mappingPagination) return;
+    el.mappingPagination.innerHTML = "";
+    if (!state.mappingTotalPages || state.mappingTotalPages < 1) return;
+
+    const currentBlock = Math.floor((state.mappingCurrentPage - 1) / PAGE_WINDOW_SIZE);
+    const startPage = currentBlock * PAGE_WINDOW_SIZE + 1;
+    const endPage = Math.min(startPage + PAGE_WINDOW_SIZE - 1, state.mappingTotalPages);
+
+    el.mappingPagination.appendChild(
+      createMappingPageItem({
+        label: "<",
+        page: Math.max(1, startPage - 1),
+        disabled: startPage <= 1
+      })
+    );
+
+    for (let page = startPage; page <= endPage; page += 1) {
+      el.mappingPagination.appendChild(
+        createMappingPageItem({
+          label: String(page),
+          page,
+          active: page === state.mappingCurrentPage
+        })
+      );
+    }
+
+    el.mappingPagination.appendChild(
+      createMappingPageItem({
+        label: ">",
+        page: Math.min(state.mappingTotalPages, endPage + 1),
+        disabled: endPage >= state.mappingTotalPages
+      })
+    );
+  }
+
+  function renderMappingPagedResult(response, fallbackPage) {
+    const items = Array.isArray(response?.items) ? response.items : [];
+    const totalCount = Number(response?.totalCount ?? response?.total_count ?? 0);
+    const totalPages = Number(response?.totalPages ?? response?.total_pages ?? 0);
+    const currentPage = Number(response?.page ?? fallbackPage);
+
+    state.mappingRows = items;
+    state.mappingTotalCount = Number.isFinite(totalCount) ? totalCount : 0;
+    state.mappingTotalPages = Number.isFinite(totalPages) ? totalPages : 0;
+    state.mappingCurrentPage = Number.isFinite(currentPage) ? currentPage : fallbackPage;
+
+    renderMappingRows(state.mappingRows);
+    renderMappingPageInfo();
+    renderMappingPagination();
+  }
+
+  async function fetchMappingPage(page = 1) {
+    const occurredDate = normalize(el.mappingDate?.value);
+    if (!occurredDate) {
+      alert("발생일을 선택해 주세요.");
+      return;
+    }
+
+    const query = buildQuery({
+      occurredDate,
+      keyword: normalize(el.mappingKeyword?.value),
+      page,
+      size: state.mappingSize
+    });
+
+    const response = await requestJson(`${API.mappingSearchPage}?${query}`);
+    renderMappingPagedResult(response, page);
+  }
+
+  async function searchMapping() {
+    try {
+      await fetchMappingPage(1);
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  el.saveUnitCost.addEventListener("input", recalcTotal);
+  el.saveQty.addEventListener("input", recalcTotal);
+  el.btnSearch.addEventListener("click", search);
+  el.btnSearchAll.addEventListener("click", searchAll);
+  el.btnSave.addEventListener("click", save);
+  el.btnUpdate.addEventListener("click", update);
+  el.btnDelete.addEventListener("click", removePurchase);
+  el.btnAutoSearch.addEventListener("click", autoSearch);
+  el.btnMappingSearch.addEventListener("click", searchMapping);
+  el.autoUploadFileName.addEventListener("click", () => el.autoUploadFile.click());
+  el.autoUploadFile.addEventListener("change", () => {
+    const file = el.autoUploadFile.files[0];
+    el.autoUploadFileName.value = file ? file.name : "";
+  });
+  el.btnAutoUpload.addEventListener("click", () => el.autoUploadFile.click());
+  el.mappingForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    searchMapping();
+  });
+
+  el.searchLarge.addEventListener("change", async () => {
+    try {
+      await loadSearchMediumOptions();
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  el.searchMedium.addEventListener("change", async () => {
+    try {
+      await loadSearchSmallOptions();
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  el.searchSmall.addEventListener("change", async () => {
+    try {
+      await loadSearchSupplierOptions();
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  el.saveLarge.addEventListener("change", async () => {
+    try {
+      state.selectedId = null;
+      state.selectedRow = null;
+      el.purchaseId.value = "";
+      await loadSaveMediumOptions();
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  el.saveMedium.addEventListener("change", async () => {
+    try {
+      state.selectedId = null;
+      state.selectedRow = null;
+      el.purchaseId.value = "";
+      await loadSaveSmallOptions();
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  el.saveSmall.addEventListener("change", async () => {
+    try {
+      state.selectedId = null;
+      state.selectedRow = null;
+      el.purchaseId.value = "";
+      await loadSaveProductOptions();
+    } catch (error) {
+      alert(error.message);
+    }
+  });
+
+  (async function initPurchasePage() {
+    try {
+      if (el.saveTime) {
+        el.saveTime.step = "1";
+      }
+      resetSelect(el.saveType, DEFAULTS.save);
+      await loadSearchLargeOptions();
+      await loadSearchMediumOptions();
+      await loadSaveLargeOptions();
+      await loadSaveMediumOptions();
+      await search();
+    } catch (error) {
+      alert(error.message);
+    }
+  })();
+})();
+
+
+</script>
+
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.2/dist/chart.umd.js" integrity="sha384-eI7PSr3L1XLISH8JdDII5YN/njoSsxfbrkCTnJrzXt+ENP5MOVBxD+l6sEG4zoLp" crossorigin="anonymous"></script><script src="dashboard.js"></script> -->
+  </body>
+</html>

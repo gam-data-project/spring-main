@@ -14,9 +14,13 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     //스프링 데이터 JPA
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2' //인메모리데이터베이스
     compileOnly 'org.projectlombok:lombok' //롬복
     annotationProcessor 'org.projectlombok:lombok'
@@ -32,6 +36,8 @@ dependencies {
     implementation 'org.apache.poi:poi-ooxml:3.17'
     /* mysql 설정*/
     implementation 'mysql:mysql-connector-java'
+    /* swagger API 문서 */
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
 }
 
