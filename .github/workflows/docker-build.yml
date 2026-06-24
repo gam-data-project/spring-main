@@ -8,72 +8,90 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch: # GitHub 화면에서 수동 실행 가능
+  workflow_dispatch:
 
 permissions:
-  contents: read      # 저장소 코드 읽기 권한
-  id-token: write     # AWS OIDC 인증용 권한
+  # 저장소 코드 읽기 권한
+  contents: read
+  # AWS OIDC 인증용 권한
+  id-token: write
 
 env:
-  AWS_REGION: us-east-1     # ECR이 있는 AWS 리전
-  ECR_REPOSITORY: spring-main # ECR 리포지토리 이름
+  # ECR이 있는 AWS 리전
+  AWS_REGION: us-east-1
+  # ECR 리포지토리 이름
+  ECR_REPOSITORY: spring-main
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     outputs:
-      image_uri: ${{ steps.meta.outputs.image_uri }}   # 다음 job에서 쓸 최종 이미지 주소
-      registry: ${{ steps.login-ecr.outputs.registry }} # ECR 레지스트리 주소
+      # 다음 job에서 쓸 최종 이미지 주소
+      image_uri: ${{ steps.meta.outputs.image_uri }}
+      # ECR 레지스트리 주소
+      registry: ${{ steps.login-ecr.outputs.registry }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6 # GitHub 저장소 코드 가져오기
+        # GitHub 저장소 코드 가져오기
+        uses: actions/checkout@v6
 
       - name: Set up Java 17
         uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
-          cache: gradle # Gradle 캐시 사용
+          # Gradle 캐시 사용
+          cache: gradle
 
       - name: Grant execute permission to gradlew
-        run: chmod +x ./gradlew # gradlew 실행 권한 부여
+        # gradlew 실행 권한 부여
+        run: chmod +x ./gradlew
 
       - name: Build bootJar
-        run: ./gradlew clean bootJar # Spring boot jar 빌드
+        # Spring boot jar 빌드
+        run: ./gradlew clean bootJar
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6.1.0
         with:
-          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }} # GitHub OIDC로 Assume할 IAM Role
+          # GitHub OIDC로 Assume할 IAM Role
+          role-to-assume: ${{ vars.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2 # ECR 로그인
+        # ECR 로그인
+        uses: aws-actions/amazon-ecr-login@v2
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v4 # Docker buildx 활성화
+        # Docker buildx 활성화
+        uses: docker/setup-buildx-action@v4
 
       - name: Set image metadata
+        # sha 태그가 붙은 최종 이미지 주소 생성
         id: meta
         run: echo "image_uri=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}" >> "$GITHUB_OUTPUT"
-        # sha 태그가 붙은 최종 이미지 주소 생성
 
       - name: Build and push image
         uses: docker/build-push-action@v7
         with:
           context: .
-          platforms: linux/amd64 # x86_64 EC2용 이미지
-          push: true             # 빌드 후 ECR에 push
+          # x86_64 EC2용 이미지
+          platforms: linux/amd64
+          # 빌드 후 ECR에 push
+          push: true
+          # 커밋 sha 태그와 latest 태그를 함께 push
           tags: |
-            ${{ steps.meta.outputs.image_uri }} # 커밋 sha 태그
-            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest # latest 태그
+            ${{ steps.meta.outputs.image_uri }}
+            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
           cache-from: type=gha
-          cache-to: type=gha,mode=max # GitHub Actions 캐시 사용
+          # GitHub Actions 캐시 사용
+          cache-to: type=gha,mode=max
 
   deploy:
-    needs: build-and-push # build-and-push 성공 후 실행
+    # build-and-push 성공 후 실행
+    needs: build-and-push
     runs-on: ubuntu-latest
 
     steps:
@@ -81,33 +99,41 @@ jobs:
         uses: appleboy/ssh-action@v1
         env:
           AWS_REGION: ${{ env.AWS_REGION }}
-          REGISTRY: ${{ needs.build-and-push.outputs.registry }} # ECR registry 주소
-          IMAGE_URI: ${{ needs.build-and-push.outputs.image_uri }} # 이번 빌드 이미지 주소
+          # ECR registry 주소
+          REGISTRY: ${{ needs.build-and-push.outputs.registry }}
+          # 이번 빌드 이미지 주소
+          IMAGE_URI: ${{ needs.build-and-push.outputs.image_uri }}
           SPRING_DATASOURCE_URL: ${{ secrets.SPRING_DATASOURCE_URL }}
           SPRING_DATASOURCE_USERNAME: ${{ secrets.SPRING_DATASOURCE_USERNAME }}
           SPRING_DATASOURCE_PASSWORD: ${{ secrets.SPRING_DATASOURCE_PASSWORD }}
           EXCEL_COMMON_IMPORT_BASE_DIR: ${{ vars.EXCEL_COMMON_IMPORT_BASE_DIR }}
           EXCEL_COMMON_IMPORT_RECIPIENT_FILTER: ${{ vars.EXCEL_COMMON_IMPORT_RECIPIENT_FILTER }}
         with:
-          host: ${{ secrets.EC2_HOST }}         # 배포 대상 EC2 퍼블릭 IP 또는 DNS
-          username: ${{ secrets.EC2_USERNAME }} # 보통 ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}       # pem 파일 내용 전체
-          script_stop: true                     # 명령 실패 시 중단
+          # 배포 대상 EC2 퍼블릭 IP 또는 DNS
+          host: ${{ secrets.EC2_HOST }}
+          # 보통 ubuntu
+          username: ${{ secrets.EC2_USERNAME }}
+          # pem 파일 내용 전체
+          key: ${{ secrets.EC2_SSH_KEY }}
+          # 명령 실패 시 중단
+          script_stop: true
           envs: AWS_REGION,REGISTRY,IMAGE_URI,SPRING_DATASOURCE_URL,SPRING_DATASOURCE_USERNAME,SPRING_DATASOURCE_PASSWORD,EXCEL_COMMON_IMPORT_BASE_DIR,EXCEL_COMMON_IMPORT_RECIPIENT_FILTER
           script: |
-            mkdir -p /home/ubuntu/gamfile
             # EC2에 필요한 디렉터리 생성
+            mkdir -p /home/ubuntu/gamfile
 
+            # EC2에서 ECR 로그인
             aws ecr get-login-password --region "$AWS_REGION" \
               | docker login --username AWS --password-stdin "$REGISTRY"
-            # EC2에서 ECR 로그인
 
-            docker pull "$IMAGE_URI"
             # 새 이미지 pull
+            docker pull "$IMAGE_URI"
 
-            docker rm -f spring-main || true
             # 기존 spring-main 컨테이너가 있으면 강제 삭제
+            docker rm -f spring-main || true
 
+            # 새 컨테이너 실행
+            # Dockerfile에 ENTRYPOINT가 없어서 java -jar app.jar를 직접 붙임
             docker run -d \
               --name spring-main \
               --restart unless-stopped \
@@ -120,5 +146,3 @@ jobs:
               -e EXCEL_COMMON_IMPORT_RECIPIENT_FILTER="$EXCEL_COMMON_IMPORT_RECIPIENT_FILTER" \
               "$IMAGE_URI" \
               java -jar app.jar
-            # 새 컨테이너 실행
-            # Dockerfile에 ENTRYPOINT가 없어서 java -jar app.jar를 직접 붙임
