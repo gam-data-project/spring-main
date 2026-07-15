@@ -145,7 +145,7 @@
 
 
 ### 🎨 UseCase Diagram
-#### [ 2024년 2차 고도화 시 UseCase ]
+#### [ 2026년 2차 고도화 시 UseCase ]
 ![usecase2](images/usecase2.jpg)
 <br>
 
