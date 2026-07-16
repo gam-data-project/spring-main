@@ -162,7 +162,7 @@
 ![시스템아키텍처2026](images/SystemArchitecture.jpg)
 <br>
 
-### 🔎 UI
+### 🔎 주요 화면
 #### [ 2026년 2차 고도화 시 화면 ]
 
 <table>
