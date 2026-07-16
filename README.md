@@ -1,7 +1,10 @@
 # ✨ 멀티 플랫폼 농산물 손익 정산 자동화
 
-### 📢 [배포 사이트] : 현재 운영 중으로 사이트 주소는 공개하지 않습니다.
+#### 📢 [배포 사이트] : 현재 운영 중으로 사이트 주소는 공개하지 않습니다.
 
+### 🔗 관련 레포지토리
+- 정산 서버(Spring Boot): [https://github.com/gam-data-project/spring-main.git](링크)
+- 크롤러 배치(Python/Selenium): [https://github.com/gam-data-project/crawler-py-batch.git](링크)
 
 ## ✨ 프로젝트 소개
 
@@ -145,7 +148,7 @@
 
 
 ### 🎨 UseCase Diagram
-#### [ 2024년 2차 고도화 시 UseCase ]
+#### [ 2026년 2차 고도화 시 UseCase ]
 ![usecase2](images/usecase2.jpg)
 <br>
 
