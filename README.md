@@ -162,8 +162,42 @@
 ![시스템아키텍처2026](images/SystemArchitecture.jpg)
 <br>
 
-### 🔎 UI
+### 🔎 주요 화면
 #### [ 2026년 2차 고도화 시 화면 ]
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="images/UI_login.png" alt="login" width="420"/><br/>
+      로그인
+    </td>
+    <td align="center">
+      <img src="images/UI_category.png" alt="category" width="420"/><br/>
+      카테고리
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="images/UI_expense.png" alt="expense" width="420"/><br/>
+      비용
+    </td>
+    <td align="center">
+      <img src="images/UI_purchase.png" alt="purchase" width="420"/><br/>
+      매입
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="images/UI_detail.png" alt="detail" width="420"/><br/>
+      상세
+    </td>
+    <td align="center">
+      <img src="images/UI_report.png" alt="report" width="420"/><br/>
+      리포트
+    </td>
+  </tr>
+</table>
+
 <br>
 
 
