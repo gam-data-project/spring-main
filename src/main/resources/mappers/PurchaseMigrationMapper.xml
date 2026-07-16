@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="org.example.repository.PurchaseMigrationMapper">
+
+    <insert id="insertNewPurchaseList" parameterType="java.util.List">
+        INSERT INTO purchases
+        (
+        product_id,
+        purchase_date,
+        purchase_time,
+        quantity,
+        unit_cost,
+        total_cost,
+        supplier_name
+        )
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.productId, jdbcType=BIGINT},
+            #{item.purchaseDate},
+            #{item.purchaseTime},
+            #{item.quantity},
+            #{item.unitCost},
+            #{item.totalCost},
+            #{item.supplierName}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

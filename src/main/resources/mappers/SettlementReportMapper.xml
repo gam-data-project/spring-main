@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.repository.SettlementReportMapper">
+
+    <select id="selectMonthlySettlementReport"
+            resultType="org.example.dto.settlementReport.response.SettlementReportRowDto">
+        WITH sales_monthly AS (
+        SELECT
+        DATE_FORMAT(order_date, '%Y-%m') AS ym,
+        SUM(product_total) AS amount
+        FROM sales
+        WHERE order_date <![CDATA[>=]]> #{startDate}
+        AND order_date <![CDATA[<]]> #{endDate}
+        GROUP BY DATE_FORMAT(order_date, '%Y-%m')
+        ),
+        monthly_shipping_extra AS (
+        SELECT
+        DATE_FORMAT(t.order_date, '%Y-%m') AS ym,
+        SUM(t.total_delivery_fee) AS amount
+        FROM (
+        SELECT DISTINCT
+        df.order_number,
+        sw.order_date,
+        df.total_delivery_fee
+        FROM delivery_fees df
+        JOIN sales sw
+        ON sw.order_number = df.order_number
+        AND sw.platform = df.platform
+        WHERE sw.shipping_included = 1
+        AND sw.order_date <![CDATA[>=]]> #{startDate}
+        AND sw.order_date <![CDATA[<]]> #{endDate}
+        ) t
+        GROUP BY DATE_FORMAT(t.order_date, '%Y-%m')
+        ),
+        sales_final AS (
+        SELECT
+        s.ym,
+        s.amount + COALESCE(ms.amount, 0) AS amount
+        FROM sales_monthly s
+        LEFT JOIN monthly_shipping_extra ms
+        ON s.ym = ms.ym
+        ),
+        purchase_monthly AS (
+        SELECT
+        DATE_FORMAT(purchase_date, '%Y-%m') AS ym,
+        SUM(total_cost) AS amount
+        FROM purchases
+        WHERE product_id IS NOT NULL
+        AND purchase_date <![CDATA[>=]]> #{startDate}
+        AND purchase_date <![CDATA[<]]> #{endDate}
+        GROUP BY DATE_FORMAT(purchase_date, '%Y-%m')
+        ),
+        expense_monthly AS (
+        SELECT
+        DATE_FORMAT(expense_date, '%Y-%m') AS ym,
+        SUM(total_cost) AS amount
+        FROM expenses
+        WHERE expense_date <![CDATA[>=]]> #{startDate}
+        AND expense_date <![CDATA[<]]> #{endDate}
+        GROUP BY DATE_FORMAT(expense_date, '%Y-%m')
+        ),
+        all_tables AS (
+        SELECT '매출' AS gb, ym, amount FROM sales_final
+        UNION ALL
+        SELECT '매입' AS gb, ym, amount FROM purchase_monthly
+        UNION ALL
+        SELECT '비용' AS gb, ym, amount FROM expense_monthly
+        )
+        SELECT
+        ym,
+        COALESCE(SUM(CASE WHEN gb = '매출' THEN amount END), 0) AS salesAmount,
+        COALESCE(SUM(CASE WHEN gb = '매입' THEN amount END), 0) AS purchaseAmount,
+        COALESCE(SUM(CASE WHEN gb = '비용' THEN amount END), 0) AS expenseAmount,
+        SUM(CASE WHEN gb = '매출' THEN amount ELSE 0 END)
+        - SUM(CASE WHEN gb = '매입' THEN amount ELSE 0 END)
+        - SUM(CASE WHEN gb = '비용' THEN amount ELSE 0 END) AS profit
+        FROM all_tables
+        GROUP BY ym
+        ORDER BY ym
+    </select>
+
+</mapper>
